@@ -97,4 +97,42 @@ public final class Tone implements Comparable<Tone> {
   Octave getOctave() {
     return this.octave;
   }
-}
+
+  /**
+   * Returns the Note that comes after this Note chromatically
+   *
+   * @return Note that comes after this Note chromatically
+   */
+  Tone nextTone() {
+      switch(this.pitch) {
+        case C:
+          return new Tone(Pitch.CSHARP, this.octave);
+        case CSHARP:
+          return new Tone(Pitch.D, this.octave);
+        case D:
+          return new Tone(Pitch.DSHARP, this.octave);
+        case DSHARP:
+          return new Tone(Pitch.E, this.octave);
+        case E:
+          return new Tone(Pitch.F, this.octave);
+        case F:
+          return new Tone(Pitch.FSHARP, this.octave);
+        case FSHARP:
+          return new Tone(Pitch.G, this.octave);
+        case G:
+          return new Tone(Pitch.GSHARP, this.octave);
+        case GSHARP:
+          return new Tone(Pitch.A, this.octave);
+        case A:
+          return new Tone(Pitch.ASHARP, this.octave);
+        case ASHARP:
+          return new Tone(Pitch.B, this.octave);
+        case B:
+          Octave[] octaves = this.octave.values();
+          return new Tone(Pitch.C, octaves[(this.octave.ordinal() + 1) % octaves.length]);
+        default:
+          return null; // never gets here
+      }
+    }
+  }
+

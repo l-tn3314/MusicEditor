@@ -13,7 +13,7 @@ import java.util.Set;
 public class MusicPiece implements MusicEditorModel {
   private int beatsInMeasure; // beats in a measure
   private int bpm; // beats per minute
-  private Map<Integer, List<PlayedNote>> beatsToNotes; // integer does not map to empty list
+  private Map<Integer, List<Note>> beatsToNotes; // integer does not map to empty list
 
   /**
    * Constructs a MusicPiece
@@ -21,7 +21,7 @@ public class MusicPiece implements MusicEditorModel {
   public MusicPiece() {
     this.beatsInMeasure = 4;
     this.bpm = 120;
-    this.beatsToNotes = new HashMap<Integer, List<PlayedNote>>();
+    this.beatsToNotes = new HashMap<Integer, List<Note>>();
   }
 
   /**
@@ -37,14 +37,14 @@ public class MusicPiece implements MusicEditorModel {
   }
 
   @Override
-  public void addNote(PlayedNote n) {
-    int noteBeat = n.getBeat();
+  public void addNote(Note n) {
+    int noteBeat = n.getDownbeat();
     int noteDur = n.getDuration();
     for (int i = 0; i < noteDur; i++) {
       if (this.beatsToNotes.containsKey(noteBeat + i)) {
         this.beatsToNotes.get(noteBeat + i).add(n);
       } else {
-        List<PlayedNote> newList = new ArrayList<PlayedNote>();
+        List<Note> newList = new ArrayList<Note>();
         newList.add(n);
         this.beatsToNotes.put(noteBeat + i, newList);
       }
@@ -52,8 +52,8 @@ public class MusicPiece implements MusicEditorModel {
   }
 
   @Override
-  public boolean removeNote(PlayedNote n) {
-    int noteBeat = n.getBeat();
+  public boolean removeNote(Note n) {
+    int noteBeat = n.getDownbeat();
     boolean temp;
     if (this.beatsToNotes.containsKey(noteBeat)) {
       int noteDur = n.getDuration();
@@ -78,25 +78,25 @@ public class MusicPiece implements MusicEditorModel {
   }
 
   @Override
-  public List<PlayedNote> notesAt(int beat) throws IllegalArgumentException {
+  public List<Note> notesAt(int beat) throws IllegalArgumentException {
     if (beat < 1) {
       throw new IllegalArgumentException("Beat cannot be less than one!");
     }
     if (this.beatsToNotes.containsKey(beat)) {
       return this.beatsToNotes.get(beat);
     } else {
-      return new ArrayList<PlayedNote>();
+      return new ArrayList<Note>();
     }
   }
 
   @Override
-  public Map<Integer, List<PlayedNote>> allNotes() {
+  public Map<Integer, List<Note>> allNotes() {
     return new HashMap(this.beatsToNotes);
   }
 
   @Override
   public void combineSimultaneous(MusicEditorModel m) {
-    Map<Integer, List<PlayedNote>> noteMap = m.allNotes();
+    Map<Integer, List<Note>> noteMap = m.allNotes();
     Set<Integer> keys = noteMap.keySet();
     for (Integer i : keys) {
       if (this.beatsToNotes.containsKey(i)) {
@@ -107,11 +107,25 @@ public class MusicPiece implements MusicEditorModel {
     }
   }
 
+  @Override
+  public void combineConsecutive(MusicEditorModel model) {
+    Map<Integer, List<Note>> noteMap = model.allNotes();
+    Set<Integer> keys = noteMap.keySet();
+    int maxKey = Collections.max(this.beatsToNotes.keySet());
+    for (Integer i : keys) {
+      List<Note> listCopy = new ArrayList<Note>();
+      for (Note pn : noteMap.get(i)) {
+        listCopy.add(new Note(pn));
+      }
+      this.beatsToNotes.put(i + maxKey, listCopy);
+    }
+  }
+
   /**
    * Removes keys that point to empty Lists in this piece's beatsToNotes
    */
   private void cleanEmptyKeys() {
-    Map<Integer, List<PlayedNote>> temp = new HashMap(this.beatsToNotes);
+    Map<Integer, List<Note>> temp = new HashMap(this.beatsToNotes);
     Set<Integer> keys = temp.keySet();
     for (Integer i : keys) {
       if (this.beatsToNotes.get(i).isEmpty()) {
@@ -120,37 +134,24 @@ public class MusicPiece implements MusicEditorModel {
     }
   }
 
-  @Override
-  public void combineConsecutive(MusicEditorModel m) {
-    Map<Integer, List<PlayedNote>> noteMap = m.allNotes();
-    Set<Integer> keys = noteMap.keySet();
-    int maxKey = Collections.max(this.beatsToNotes.keySet());
-    for (Integer i : keys) {
-      List<PlayedNote> listCopy = new ArrayList<PlayedNote>();
-      for (PlayedNote pn : noteMap.get(i)) {
-        listCopy.add(new PlayedNote(pn));
-      }
-      this.beatsToNotes.put(i + maxKey, listCopy);
-    }
-  }
 
   /**
    * Creates a two-element array containing the lowest and highest note
    *
    * @return A two-element array containing the lowest and highest note
    */
-  private PlayedNote[] lowestHighest() {
-    PlayedNote[] arr = new PlayedNote[2];
+  private Note[] lowestHighest() {
+    Note[] arr = new Note[2];
     Set<Integer> keys = this.beatsToNotes.keySet();
     for (Integer i : keys) {
-      PlayedNote pn = this.beatsToNotes.get(i).get(0);
+      Note pn = this.beatsToNotes.get(i).get(0);
       arr[0] = pn;
       arr[1] = pn;
       break;
     }
     for (Integer i : keys) {
-      List<PlayedNote> notesList = this.beatsToNotes.get(i);
-      for (PlayedNote pn : notesList) {
+      List<Note> notesList = this.beatsToNotes.get(i);
+      for (Note pn : notesList) {
         if (pn.compareTo(arr[0]) < 0) {
           arr[0] = pn;
         }
@@ -167,7 +168,7 @@ public class MusicPiece implements MusicEditorModel {
     if (this.beatsToNotes.isEmpty()) {
       throw new IllegalArgumentException("There is nothing to display!");
     }
-    PlayedNote[] lowhigh = this.lowestHighest();
+    Note[] lowhigh = this.lowestHighest();
     int noteRange = lowhigh[1].compareTo(lowhigh[0]) + 1;
     Set<Integer> keys = this.beatsToNotes.keySet();
     String[][] grid = new String[Collections.max(keys) + 1][noteRange + 1];
@@ -183,10 +184,10 @@ public class MusicPiece implements MusicEditorModel {
       grid[i][0] = String.format("%" + Integer.toString(padLeft) + "s", Integer.toString(i));
     }
     grid[0][1] = String.format("%4s", lowhigh[0]) + " ";
-    Note n = lowhigh[0].nextNote();
+    Tone n = lowhigh[0].nextTone();
     for (int j = 2; j < grid[0].length; j++) {
       grid[0][j] = String.format("%4s", n.toString()) + " ";
-      n = n.nextNote();
+      n = n.nextTone();
     }
 
     // placeholders for all other rows and columns
@@ -198,10 +199,10 @@ public class MusicPiece implements MusicEditorModel {
 
     // replacing placeholders, if applicable
     for (Integer i : keys) {
-      List<PlayedNote> notesPlaying = this.beatsToNotes.get(i);
-      for (PlayedNote pn : notesPlaying) {
+      List<Note> notesPlaying = this.beatsToNotes.get(i);
+      for (Note pn : notesPlaying) {
         String str;
-        if (pn.getBeat() == i) {
+        if (pn.getDownbeat() == i) {
           str = "  X  ";
         } else {
           str = "  |  ";

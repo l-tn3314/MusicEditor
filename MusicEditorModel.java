@@ -13,7 +13,7 @@ public interface MusicEditorModel {
    *
    * @param note to be added to the music editor
    */
-  void addNote(PlayedNote note);
+  void addNote(Note note);
 
   /**
    * Removes the given note from the music editor
@@ -21,7 +21,7 @@ public interface MusicEditorModel {
    * @param note to be removed
    * @return true if given note is successfully removed, false if not present
    */
-  boolean removeNote(PlayedNote note);
+  boolean removeNote(Note note);
 
   /**
    * Removes all notes that start on the given beat
@@ -39,7 +39,7 @@ public interface MusicEditorModel {
    * @return list of all PlayedNotes on the given beat
    * @throws IllegalArgumentException if given beat is less than one
    */
-  List<PlayedNote> notesAt(int beat) throws IllegalArgumentException;
+  List<Note> notesAt(int beat) throws IllegalArgumentException;
 
   /**
    * Returns a Map of all PlayedNotes in the music editor, where Integer represents the beat and
@@ -47,7 +47,7 @@ public interface MusicEditorModel {
    *
    * @return List of all PlayedNotes in the music editor
    */
-  Map<Integer, List<PlayedNote>> allNotes();
+  Map<Integer, List<Note>> allNotes();
 
   /**
    * Adds the notes of the given model to this model

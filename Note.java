@@ -13,7 +13,7 @@ import java.util.Objects;
  * constructor. Another class invariant is that a user can input a negative downbeat since its type
  * is an int. This is also restricted in the constructor to prevent these errors at compile time.
  */
-public class Note {
+public class Note implements Comparable<Note> {
   private Tone tone; // column where placed
   private int downbeat; // the starting beat(starts from 0)
   private int duration; // how long each note is played
@@ -27,7 +27,7 @@ public class Note {
    * @param duration how long this Note is played for. The input is restricted to numbers greater
    *                 than 1 because a duration of zero or a negative number is not possible
    */
-  public Note(Tone tone, int downbeat, int duration) {
+  public Note(Tone tone, int duration, int downbeat) {
     this.tone = tone;
     if (this.downbeat < 0) {
       throw new IllegalArgumentException("Can't have negative downbeat");
@@ -38,6 +38,11 @@ public class Note {
     }
     this.duration = duration;
     this.playing = false; // initialized to be at rest
+  }
+
+  //creates a copy
+  public Note(Note note) {
+    this(new Tone(note.tone.getPitch(), note.tone.getOctave()), note.downbeat, note.duration);
   }
 
   /**
@@ -124,5 +129,19 @@ public class Note {
    */
   void updateDownbeat(int newBeat) {
     downbeat = newBeat;
+  }
+
+  @Override
+  public int compareTo(Note t) {
+    return this.tone.compareTo(t.tone);
+  }
+
+  Tone nextTone() {
+    return this.tone.nextTone();
+  }
+
+  @Override
+  public String toString() {
+    return this.tone.toString();
   }
 }

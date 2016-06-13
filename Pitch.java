@@ -7,8 +7,8 @@ package cs3500.music.model;
  * other pitch that is equivalent to these sounds are not supported by this implementation.
  */
 public enum Pitch {
-  C("C"), CSHARP("C♯"), D("D"), DSHARP("D♯"), E("E"), F("F"), FSHARP("F♯"),
-  G("G"), GSHARP("G♯"), A("A"), ASHARP("A♯"), B("B");
+  C("C"), CSHARP("C#"), D("D"), DSHARP("D#"), E("E"), F("F"), FSHARP("F#"),
+  G("G"), GSHARP("G#"), A("A"), ASHARP("A#"), B("B");
 
   private final String value; // to represent the string value of this Pitch
 
