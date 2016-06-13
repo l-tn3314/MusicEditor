@@ -1,7 +1,10 @@
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cs3500.music.model.MusicEditorModel;
 import cs3500.music.model.MusicPiece;
@@ -16,13 +19,82 @@ import static org.junit.Assert.assertEquals;
 public class MusicModelTest {
   MusicEditorModel mm = new MusicPiece();
 
+  MusicEditorModel piece;
+  MusicEditorModel piece2;
+  Note e4BeatOne;
+  Note d4BeatThree;
+  Note c4BeatFive;
+  Note d4BeatSeven;
+  Note e4BeatNine;
+  Note e4BeatEleven;
+  Note e4BeatThirteen;
+
+  Note g3BeatOne;
+  Note g3BeatNine;
+
+  Tone e4 = new Tone
+          (Pitch.E, Octave.FOUR);
+  Tone d4 = new Tone
+          (Pitch.D, Octave.FOUR);
+  Tone g3 = new Tone
+          (Pitch.G, Octave.THREE);
+
+  @Before
+  public void init() {
+    piece = new MusicPiece();
+    piece2 = new MusicPiece();
+    e4BeatOne = new Note(e4, 2, 1);
+    d4BeatThree = new Note(d4, 2, 3);
+    c4BeatFive = new Note(new Tone
+            (Pitch.C, Octave.FOUR), 2, 5);
+    d4BeatSeven = new Note(d4, 2, 7);
+    e4BeatNine = new Note(e4, 2, 9);
+    e4BeatEleven = new Note(e4, 2, 11);
+    e4BeatThirteen = new Note(e4, 2, 13);
+    g3BeatOne = new Note(g3, 7, 1);
+    g3BeatNine = new Note(g3, 7, 9);
+  }
+
+  @Test
+  public void testAllNotesEmpty() {
+    assertEquals(new HashMap<Integer, List<Note>>(), piece.allNotes());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testNotesAtNegative() {
+    piece.notesAt(-2);
+  }
+
+
+  @Test
+  public void testNotesAtEmpty() {
+    assertEquals(new ArrayList<Note>(), piece.notesAt(1));
+    assertEquals(new ArrayList<Note>(), piece.notesAt(5));
+  }
+
+  @Test
+  public void testAddNoteToEmpty() {
+    piece.addNote(e4BeatOne);
+    List<Note> arr = new ArrayList<Note>();
+    arr.add(e4BeatOne);
+    assertEquals(arr, piece.notesAt(1));
+    assertEquals(arr, piece.notesAt(2));
+    assertEquals(new ArrayList<Note>(), piece.notesAt(3));
+
+    Map<Integer, List<Note>> NoteMap = new HashMap<Integer, List<Note>>();
+    NoteMap.put(1, arr);
+    NoteMap.put(2, arr);
+    assertEquals(NoteMap, piece.allNotes());
+  }
+
+
   // to test the method stringView is not paddint any beats when the
   // total duration of a piece of music is less than 10.
   @Test
   public void testPaddingOneChar() {
-    Note n = new Note(new Tone(Pitch.A, Octave.NINE), 4, 3);
+    Note n = new Note(new Tone(Pitch.A, Octave.NINE), 3, 4);
     mm.addNote(n);
-    assertEquals("  A9 \n" +
+    assertEquals("   A9 \n" +
                     "0     \n" +
                     "1     \n" +
                     "2     \n" +
@@ -33,34 +105,49 @@ public class MusicModelTest {
             mm.stringView());
   }
 
-//  // to test the method getNotes and that all of the notes have been added to the MusicModel are
+//  // to test the method allNotes and that all of the notes have been added to the MusicModel are
 //  // there. This test is for one note
-//  @Test
-//  public void testGetNotesOne() {
-//    Note n = new Note(new Tone(Pitch.C, Octave.ONE), 3, 3);
-//    mm.addNote(n);
-//
-//    ArrayList<Note> notes = new ArrayList<Note>();
-//    notes.add(n);
-//    assertEquals(notes,
-//            mm.getNotes());
-//  }
-//
-//  // to test the method getNotes for a list of notes to see if all of the notes have been added
-//  // to the Music Model
-//  @Test
-//  public void testGetNotesMultiple() {
-//    Note n = new Note(new Tone(Pitch.ASHARP, Octave.ONE), 4, 5);
-//    Note n1 = new Note(new Tone(Pitch.F, Octave.SEVEN), 3, 5);
-//    mm.addNote(n);
-//    mm.addNote(n1);
-//    ArrayList<Note> notes = new ArrayList<Note>();
-//    notes.add(n);
-//    notes.add(n1);
-//    assertEquals(notes,
-//            mm.getNotes());
-//  }
-//
+  @Test
+  public void testGetNotesOne() {
+    Note n = new Note(new Tone(Pitch.C, Octave.ONE), 3, 3);
+    mm.addNote(n);
+
+    List<Note> arr = new ArrayList<Note>();
+    arr.add(n);
+    assertEquals(arr, mm.notesAt(3));
+    assertEquals(arr, mm.notesAt(4));
+    assertEquals(arr, mm.notesAt(5));
+    HashMap<Integer, List<Note>> notes = new HashMap<Integer, List<Note>>();
+    notes.put(3, arr);
+    notes.put(4, arr);
+    notes.put(5, arr);
+    assertEquals(notes,
+            mm.allNotes());
+  }
+
+  // to test the method getNotes for a list of notes to see if all of the notes have been added
+  // to the Music Model
+  @Test
+  public void testGetNotesMultiple() {
+    Note n = new Note(new Tone(Pitch.ASHARP, Octave.ONE), 2, 4);
+    Note n1 = new Note(new Tone(Pitch.F, Octave.SEVEN), 2, 3);
+    mm.addNote(n);
+    mm.addNote(n1);
+    List<Note> arr3 = new ArrayList<Note>(); // notes at beat 3
+    List<Note> arr4 = new ArrayList<Note>(); // notes at beat 4
+    List<Note> arr34 = new ArrayList<Note>(); // notes at 3 and 4
+    arr3.add(n1);
+    arr4.add(n);
+    arr34.add(n);
+    arr34.add(n1);
+    HashMap<Integer, List<Note>> notes = new HashMap<Integer, List<Note>>();
+    notes.put(3, arr3);
+    notes.put(4, arr34);
+    notes.put(5, arr4);
+    assertEquals(notes,
+            mm.allNotes());
+  }
+
 //  // to test the method getNotes when no notes have been added to the Music Model
 //  @Test
 //  public void testGetNotesNoNotes() {
@@ -82,12 +169,12 @@ public class MusicModelTest {
   // to test the method getNotesAtBeat() when there are multiple notes at the beat
   @Test
   public void testMultipleNotesAtBeat() {
-    mm.addNote(new Note(new Tone(Pitch.D, Octave.SIX), 0, 1));
-    mm.addNote(new Note(new Tone(Pitch.D, Octave.FIVE), 0, 5));
-    mm.addNote(new Note(new Tone(Pitch.ASHARP, Octave.FIVE), 4, 2));
+    mm.addNote(new Note(new Tone(Pitch.D, Octave.SIX), 1, 0));
+    mm.addNote(new Note(new Tone(Pitch.D, Octave.FIVE), 5, 0));
+    mm.addNote(new Note(new Tone(Pitch.ASHARP, Octave.FIVE), 2, 4));
     List<Note> notes = new ArrayList<Note>();
-    notes.add(new Note(new Tone(Pitch.D, Octave.SIX), 0, 1));
-    notes.add(new Note(new Tone(Pitch.D, Octave.FIVE), 0, 5));
+    notes.add(new Note(new Tone(Pitch.D, Octave.SIX), 1, 0));
+    notes.add(new Note(new Tone(Pitch.D, Octave.FIVE), 5, 0));
     assertEquals(notes,
             mm.notesAt(0));
 
@@ -96,7 +183,7 @@ public class MusicModelTest {
   // to test the method getNotesAtBeat when there are no notes at the beat
   @Test
   public void testGetBeatNotesNoNotes() {
-    mm.addNote(new Note(new Tone(Pitch.ASHARP, Octave.FIVE), 4, 2));
+    mm.addNote(new Note(new Tone(Pitch.ASHARP, Octave.FIVE), 2, 4));
     List<Note> notes = new ArrayList<Note>();
     assertEquals(notes,
             mm.notesAt(2));
@@ -105,85 +192,77 @@ public class MusicModelTest {
   // to test the method stringView is padding the beats corresponding
   // to the length of the longest beat in the song when the longest beat is
   // 2 characters long (between 10 - 99)
-//  @Test
-//  public void testPaddingTwoChar() {
-//    List<Note> notes = new ArrayList<Note>();
-//    Note n = new Note(new Tone(Pitch.ASHARP, Octave.EIGHT), 10, 4);
-//    notes.add(n);
-//    mm.initializeEditor(notes);
-//    assertEquals("  A♯8 \n" +
-//                    " 0     \n" +
-//                    " 1     \n" +
-//                    " 2     \n" +
-//                    " 3     \n" +
-//                    " 4     \n" +
-//                    " 5     \n" +
-//                    " 6     \n" +
-//                    " 7     \n" +
-//                    " 8     \n" +
-//                    " 9     \n" +
-//                    "10  X  \n" +
-//                    "11  |  \n" +
-//                    "12  |  \n" +
-//                    "13  |  \n",
-//            mm.stringView());
-//  }
+  @Test
+  public void testPaddingTwoChar() {
+    Note n = new Note(new Tone(Pitch.ASHARP, Octave.EIGHT), 4, 10);
+    mm.addNote(n);
+    assertEquals("   A#8 \n" +
+                    " 0     \n" +
+                    " 1     \n" +
+                    " 2     \n" +
+                    " 3     \n" +
+                    " 4     \n" +
+                    " 5     \n" +
+                    " 6     \n" +
+                    " 7     \n" +
+                    " 8     \n" +
+                    " 9     \n" +
+                    "10  X  \n" +
+                    "11  |  \n" +
+                    "12  |  \n" +
+                    "13  |  \n",
+            mm.stringView());
+  }
 
   // to test the method initializeEditor when given a list of only one note
   // with a duration of one
-//  @Test
-//  public void testOneNoteDurationOne() {
-//    List<Note> notes = new ArrayList<Note>();
-//    Note n = new Note(new Tone(Pitch.ASHARP, Octave.EIGHT), 0, 1);
-//    notes.add(n);
-//    mm.initializeEditor(notes);
-//    assertEquals(" A♯8 \n" +
-//                    "0  X  \n",
-//            mm.stringView());
-//  }
-//
-//  // to test the method initializeEditor when giving it a list of only one note
-//  // and a duration greater than One
-//  @Test
-//  public void testOneNoteDurationBiggerThanOne() {
-//    List<Note> notes = new ArrayList<Note>();
-//    Note n = new Note(new Tone(Pitch.C, Octave.FOUR), 4, 3);
-//    notes.add(n);
-//    mm.initializeEditor(notes);
-//    assertEquals("  C4 \n" +
-//                    "0     \n" +
-//                    "1     \n" +
-//                    "2     \n" +
-//                    "3     \n" +
-//                    "4  X  \n" +
-//                    "5  |  \n" +
-//                    "6  |  \n",
-//            mm.stringView());
-//  }
-//
-//  // to test initializeEditor when given a list of multiple notes each with one duration and no
-//  // overlaps
-//  @Test
-//  public void testOneDuration() {
-//    List<Note> notes = new ArrayList<Note>();
-//    Note n = new Note(new Tone(Pitch.C, Octave.EIGHT), 0, 1);
-//    Note n1 = new Note(new Tone(Pitch.F, Octave.EIGHT), 4, 1);
-//    Note n2 = new Note(new Tone(Pitch.ASHARP, Octave.EIGHT), 3, 1);
-//    Note n3 = new Note(new Tone(Pitch.B, Octave.EIGHT), 2, 1);
-//
-//    notes.add(n);
-//    notes.add(n1);
-//    notes.add(n2);
-//    notes.add(n3);
-//    mm.initializeEditor(notes);
-//    assertEquals("  C8  C♯8   D8  D♯8   E8   F8  F♯8   G8  G♯8   A8  A♯8   B8 \n" +
-//                    "0  X                                                         \n" +
-//                    "1                                                            \n" +
-//                    "2                                                         X  \n" +
-//                    "3                                                    X       \n" +
-//                    "4                           X                                \n",
-//            mm.stringView());
-//  }
+  @Test
+  public void testOneNoteDurationOne() {
+    Note n = new Note(new Tone(Pitch.ASHARP, Octave.EIGHT), 1, 0);
+    mm.addNote(n);
+    assertEquals("  A#8 \n" +
+                    "0  X  \n",
+            mm.stringView());
+  }
+
+  // to test the method addNote for one note and the duration is greater than one
+  @Test
+  public void testOneNoteDurationBiggerThanOne() {
+    Note n = new Note(new Tone(Pitch.C, Octave.FOUR), 3, 4);
+    mm.addNote(n);
+    assertEquals("   C4 \n" +
+                    "0     \n" +
+                    "1     \n" +
+                    "2     \n" +
+                    "3     \n" +
+                    "4  X  \n" +
+                    "5  |  \n" +
+                    "6  |  \n",
+            mm.stringView());
+  }
+
+  // to test initializeEditor when given a list of multiple notes each with one duration and no
+  // overlaps
+  @Test
+  public void testOneDuration() {
+    Note n = new Note(new Tone(Pitch.C, Octave.EIGHT), 1, 0);
+    Note n1 = new Note(new Tone(Pitch.F, Octave.EIGHT), 1, 4);
+    Note n2 = new Note(new Tone(Pitch.ASHARP, Octave.EIGHT), 1, 3);
+    Note n3 = new Note(new Tone(Pitch.B, Octave.EIGHT), 1, 2);
+
+    mm.addNote(n);
+    mm.addNote(n1);
+    mm.addNote(n2);
+    mm.addNote(n3);
+
+    assertEquals("   C8  C#8   D8  D#8   E8   F8  F#8   G8  G#8   A8  A#8   B8 \n" +
+                    "0  X                                                         \n" +
+                    "1                                                            \n" +
+                    "2                                                         X  \n" +
+                    "3                                                    X       \n" +
+                    "4                           X                                \n",
+            mm.stringView());
+  }
 
   // to test the method initializeEditor when given a list of notes of different
   // durations that do not overlap
@@ -192,11 +271,11 @@ public class MusicModelTest {
     List<Note> notes = new ArrayList<Note>();
     Note n = new Note(new Tone(Pitch.A, Octave.FOUR), 2, 2);
     Note n1 = new Note(new Tone(Pitch.D, Octave.FOUR), 3, 3);
-    Note n2 = new Note(new Tone(Pitch.DSHARP, Octave.FOUR), 1, 5);
+    Note n2 = new Note(new Tone(Pitch.DSHARP, Octave.FOUR), 5, 1);
     mm.addNote(n);
     mm.addNote(n1);
     mm.addNote(n2);
-    assertEquals("  D4  D♯4   E4   F4  F♯4   G4  G♯4   A4 \n" +
+    assertEquals("   D4  D#4   E4   F4  F#4   G4  G#4   A4 \n" +
                     "0                                        \n" +
                     "1       X                                \n" +
                     "2       |                             X  \n" +
@@ -532,9 +611,9 @@ public class MusicModelTest {
   // to test the method removeNote when the editor only has one note
   @Test
   public void testRemoveOne() {
-    Note n = new Note(new Tone(Pitch.A, Octave.FOUR), 4, 8);
+    Note n = new Note(new Tone(Pitch.A, Octave.FOUR), 8, 4);
     mm.addNote(n);
-    assertEquals("   A4 \n" +
+    assertEquals("    A4 \n" +
                     " 0     \n" +
                     " 1     \n" +
                     " 2     \n" +
@@ -556,13 +635,13 @@ public class MusicModelTest {
   // to test the method removeNote if the Music Model has several Notes
   @Test
   public void testRemoveSeveral() {
-    Note n = new Note(new Tone(Pitch.C, Octave.FOUR), 4, 5);
-    Note n1 = new Note(new Tone(Pitch.F, Octave.FOUR), 2, 12);
-    Note n2 = new Note(new Tone(Pitch.D, Octave.FOUR), 3, 6);
+    Note n = new Note(new Tone(Pitch.C, Octave.FOUR), 5, 4);
+    Note n1 = new Note(new Tone(Pitch.F, Octave.FOUR), 12, 2);
+    Note n2 = new Note(new Tone(Pitch.D, Octave.FOUR), 6, 3);
     mm.addNote(n);
     mm.addNote(n1);
     mm.addNote(n2);
-    assertEquals("   C4  C♯4   D4  D♯4   E4   F4 \n" +
+    assertEquals("    C4  C#4   D4  D#4   E4   F4 \n" +
                     " 0                              \n" +
                     " 1                              \n" +
                     " 2                           X  \n" +
@@ -579,7 +658,7 @@ public class MusicModelTest {
                     "13                           |  \n",
             mm.stringView());
     mm.removeNote(n);
-    assertEquals("   D4  D♯4   E4   F4 \n" +
+    assertEquals("    D4  D#4   E4   F4 \n" +
                     " 0                    \n" +
                     " 1                    \n" +
                     " 2                 X  \n" +
@@ -600,10 +679,10 @@ public class MusicModelTest {
   // to test when two of the same notes are in the Music Model and then removeNote is called
   @Test
   public void testDuplicatesRemove() {
-    Note n = new Note(new Tone(Pitch.A, Octave.EIGHT), 4, 5);
+    Note n = new Note(new Tone(Pitch.A, Octave.EIGHT), 5, 4);
     mm.addNote(n);
     mm.addNote(n);
-    assertEquals("  A8 \n" +
+    assertEquals("   A8 \n" +
                     "0     \n" +
                     "1     \n" +
                     "2     \n" +
@@ -616,7 +695,7 @@ public class MusicModelTest {
             mm.stringView());
 
     mm.removeNote(n);
-    assertEquals("  A8 \n" +
+    assertEquals("   A8 \n" +
                     "0     \n" +
                     "1     \n" +
                     "2     \n" +
