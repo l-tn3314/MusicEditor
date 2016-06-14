@@ -52,6 +52,13 @@ public class MusicPiece implements MusicEditorModel {
   }
 
   @Override
+  public void addNotes(Note... notes) {
+    for (Note n : notes) {
+      this.addNote(n);
+    }
+  }
+
+  @Override
   public boolean removeNote(Note n) {
     int noteBeat = n.getDownbeat();
     boolean temp;
@@ -95,30 +102,39 @@ public class MusicPiece implements MusicEditorModel {
   }
 
   @Override
-  public void combineSimultaneous(MusicEditorModel m) {
+  public MusicEditorModel combineSimultaneous(MusicEditorModel m) {
+    MusicEditorModel result = new MusicPiece();
+    for (Integer i : this.beatsToNotes.keySet()) {
+      List<Note> notes = this.beatsToNotes.get(i);
+      result.addNotes(notes.toArray(new Note[notes.size()]));
+    }
     Map<Integer, List<Note>> noteMap = m.allNotes();
     Set<Integer> keys = noteMap.keySet();
-    for (Integer i : keys) {
-      if (this.beatsToNotes.containsKey(i)) {
-        this.beatsToNotes.get(i).addAll(noteMap.get(i));
-      } else {
-        this.beatsToNotes.put(i, noteMap.get(i));
-      }
+    for (Integer k : keys) {
+      List<Note> givenNotes = noteMap.get(k);
+      result.addNotes(givenNotes.toArray(new Note[givenNotes.size()]));
     }
+    return result;
   }
 
   @Override
-  public void combineConsecutive(MusicEditorModel model) {
+  public MusicEditorModel combineConsecutive(MusicEditorModel model) {
+    MusicEditorModel result = new MusicPiece();
+    for (Integer i : this.beatsToNotes.keySet()) {
+      List<Note> notes = this.beatsToNotes.get(i);
+      result.addNotes(notes.toArray(new Note[notes.size()]));
+    }
     Map<Integer, List<Note>> noteMap = model.allNotes();
     Set<Integer> keys = noteMap.keySet();
     int maxKey = Collections.max(this.beatsToNotes.keySet());
     for (Integer i : keys) {
       List<Note> listCopy = new ArrayList<Note>();
       for (Note pn : noteMap.get(i)) {
-        listCopy.add(new Note(pn));
+        listCopy.add(new Note(pn.getTone(), pn.getDuration(), pn.getDownbeat() + maxKey + 1));
       }
-      this.beatsToNotes.put(i + maxKey, listCopy);
+      result.addNotes(listCopy.toArray(new Note[listCopy.size()]));
     }
+    return result;
   }
 
   /**
@@ -209,7 +225,9 @@ public class MusicPiece implements MusicEditorModel {
           } else {
             str = "  |  ";
           }
-          grid[i + 1][pn.compareTo(lowhigh[0]) + 1] = str;
+          if (!grid[i + 1][pn.compareTo(lowhigh[0]) + 1].equals("  X  ")) {
+            grid[i + 1][pn.compareTo(lowhigh[0]) + 1] = str;
+          }
         }
       }
 

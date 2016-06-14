@@ -285,94 +285,86 @@ public class MusicModelTest {
             mm.stringView());
   }
 
-//
-//  // to test initializeEditor when two notes in the given list are
-//  // the same tone, have the same downbeat, and have the same duration
-//  @Test
-//  public void testOverlapSameDuration() {
-//    List<Note> notes = new ArrayList<Note>();
-//    Note n = new Note(new Tone(Pitch.A, Octave.SEVEN), 4, 4);
-//    Note n1 = new Note(new Tone(Pitch.A, Octave.SEVEN), 4, 4);
-//    notes.add(n);
-//    notes.add(n1);
-//    mm.initializeEditor(notes);
-//    assertEquals("  A7 \n" +
-//                    "0     \n" +
-//                    "1     \n" +
-//                    "2     \n" +
-//                    "3     \n" +
-//                    "4  X  \n" +
-//                    "5  |  \n" +
-//                    "6  |  \n" +
-//                    "7  |  \n",
-//            mm.stringView());
-//  }
-//
-//  // to test initializeEditor when two notes have the same tone and the same
-//  // downbeat but one of the durations is shorter
-//  @Test
-//  public void testOverlayDifferentDuration() {
-//    List<Note> notes = new ArrayList<Note>();
-//    Note n = new Note(new Tone(Pitch.A, Octave.SEVEN), 4, 4);
-//    Note n1 = new Note(new Tone(Pitch.A, Octave.SEVEN), 4, 2);
-//    notes.add(n);
-//    notes.add(n1);
-//    mm.initializeEditor(notes);
-//    assertEquals("  A7 \n" +
-//                    "0     \n" +
-//                    "1     \n" +
-//                    "2     \n" +
-//                    "3     \n" +
-//                    "4  X  \n" +
-//                    "5  |  \n" +
-//                    "6  |  \n" +
-//                    "7  |  \n",
-//            mm.stringView());
-//  }
-//
-//  // to test initializeEditor when two notes have the same tone and their downbeats
-//  // are right after each other and their durations overlap
-//  @Test
-//  public void testConsecutiveDownbeat() {
-//    List<Note> notes = new ArrayList<Note>();
-//    Note n = new Note(new Tone(Pitch.A, Octave.SEVEN), 4, 4);
-//    Note n1 = new Note(new Tone(Pitch.A, Octave.SEVEN), 5, 2);
-//    notes.add(n);
-//    notes.add(n1);
-//    mm.initializeEditor(notes);
-//    assertEquals("  A7 \n" +
-//                    "0     \n" +
-//                    "1     \n" +
-//                    "2     \n" +
-//                    "3     \n" +
-//                    "4  X  \n" +
-//                    "5  X  \n" +
-//                    "6  |  \n" +
-//                    "7  |  \n",
-//            mm.stringView());
-//  }
-//
-//  // to test initializeEditor when two notes have the same tone and their downbeats
-//  // are not right after eachother but their durations overlap.
-//  @Test
-//  public void testNotConsecutiveDownbeat() {
-//    List<Note> notes = new ArrayList<Note>();
-//    Note n = new Note(new Tone(Pitch.A, Octave.TWO), 4, 4);
-//    Note n1 = new Note(new Tone(Pitch.A, Octave.TWO), 6, 2);
-//    notes.add(n);
-//    notes.add(n1);
-//    mm.initializeEditor(notes);
-//    assertEquals("  A2 \n" +
-//                    "0     \n" +
-//                    "1     \n" +
-//                    "2     \n" +
-//                    "3     \n" +
-//                    "4  X  \n" +
-//                    "5  |  \n" +
-//                    "6  X  \n" +
-//                    "7  |  \n",
-//            mm.stringView());
-//  }
+
+  // to test initializeEditor when two notes in the given list are
+  // the same tone, have the same downbeat, and have the same duration
+  @Test
+  public void testOverlapSameDuration() {
+    Note n = new Note(new Tone(Pitch.A, Octave.SEVEN), 4, 4);
+    Note n1 = new Note(new Tone(Pitch.A, Octave.SEVEN), 4, 4);
+    mm.addNote(n);
+    mm.addNote(n1);
+    assertEquals("   A7 \n" +
+                    "0     \n" +
+                    "1     \n" +
+                    "2     \n" +
+                    "3     \n" +
+                    "4  X  \n" +
+                    "5  |  \n" +
+                    "6  |  \n" +
+                    "7  |  \n",
+            mm.stringView());
+  }
+
+  // to test initializeEditor when two notes have the same tone and the same
+  // downbeat but one of the durations is shorter
+  @Test
+  public void testOverlayDifferentDuration() {
+    Note n = new Note(new Tone(Pitch.A, Octave.SEVEN), 4, 4);
+    Note n1 = new Note(new Tone(Pitch.A, Octave.SEVEN), 2, 4);
+    mm.addNote(n);
+    mm.addNote(n1);
+    assertEquals("   A7 \n" +
+                    "0     \n" +
+                    "1     \n" +
+                    "2     \n" +
+                    "3     \n" +
+                    "4  X  \n" +
+                    "5  |  \n" +
+                    "6  |  \n" +
+                    "7  |  \n",
+            mm.stringView());
+  }
+
+  // to test initializeEditor when two notes have the same tone and their downbeats
+  // are right after each other and their durations overlap
+  @Test
+  public void testConsecutiveDownbeat() {
+    Note n = new Note(new Tone(Pitch.A, Octave.SEVEN), 4, 4);
+    Note n1 = new Note(new Tone(Pitch.A, Octave.SEVEN), 2, 5);
+    mm.addNote(n);
+    mm.addNote(n1);
+    assertEquals("   A7 \n" +
+                    "0     \n" +
+                    "1     \n" +
+                    "2     \n" +
+                    "3     \n" +
+                    "4  X  \n" +
+                    "5  X  \n" +
+                    "6  |  \n" +
+                    "7  |  \n",
+            mm.stringView());
+  }
+
+  // to test initializeEditor when two notes have the same tone and their downbeats
+  // are not right after eachother but their durations overlap.
+  @Test
+  public void testNotConsecutiveDownbeat() {
+    Note n = new Note(new Tone(Pitch.A, Octave.TWO), 4, 4);
+    Note n1 = new Note(new Tone(Pitch.A, Octave.TWO), 2, 6);
+    mm.addNote(n);
+    mm.addNote(n1);
+    assertEquals("   A2 \n" +
+                    "0     \n" +
+                    "1     \n" +
+                    "2     \n" +
+                    "3     \n" +
+                    "4  X  \n" +
+                    "5  |  \n" +
+                    "6  X  \n" +
+                    "7  |  \n",
+            mm.stringView());
+  }
 //
 //  // to test the method initializeEditor when multiple notes are played one
 //  // after another
@@ -742,158 +734,150 @@ public class MusicModelTest {
 //    mm.removeNote(new Note(new Tone(Pitch.A, Octave.FOUR), 2, 2));
 //  }
 
-  //GenericMusicEditor mmOther = MusicModelCreator.create(); // for use when this editor
+  MusicEditorModel mmOther = new MusicPiece();
 
 
-//  // to test the method playSimultaneously when each piece of music has only one note
-//  @Test
-//  public void testCombineTwoOneNoteOnly() {
-//    List<Note> notes = new ArrayList<Note>();
-//    Note n = new Note(new Tone(Pitch.A, Octave.FOUR), 5, 2);
-//    notes.add(n);
-//    mm.initializeEditor(notes);
-//    assertEquals("  A4 \n" +
-//                    "0     \n" +
-//                    "1     \n" +
-//                    "2     \n" +
-//                    "3     \n" +
-//                    "4     \n" +
-//                    "5  X  \n" +
-//                    "6  |  \n",
-//            mm.stringView());
-//
-//    List<Note> notesother = new ArrayList<Note>();
-//    Note n1 = new Note(new Tone(Pitch.C, Octave.FIVE), 2, 2);
-//    notesother.add(n1);
-//    mmOther.initializeEditor(notesother);
-//    assertEquals("  C5 \n" +
-//                    "0     \n" +
-//                    "1     \n" +
-//                    "2  X  \n" +
-//                    "3  |  \n",
-//            mmOther.stringView());
-//
-//    assertEquals("  A4  A♯4   B4   C5 \n" +
-//                    "0                    \n" +
-//                    "1                    \n" +
-//                    "2                 X  \n" +
-//                    "3                 |  \n" +
-//                    "4                    \n" +
-//                    "5  X                 \n" +
-//                    "6  |                 \n",
-//            mm.playSimultaneously(mmOther).stringView());
-//  }
-//
-//  // to test the method playSimultaneously when both models have the same music
-//  @Test
-//  public void testPlaySameMusicSimul() {
-//    Note n = new Note(new Tone(Pitch.CSHARP, Octave.NINE), 4, 3);
-//    Note n1 = new Note(new Tone(Pitch.CSHARP, Octave.NINE), 2, 3);
-//    Note n2 = new Note(new Tone(Pitch.D, Octave.NINE), 3, 4);
-//    mm.addNote(n);
-//    mm.addNote(n1);
-//    mm.addNote(n2);
-//    assertEquals(" C♯9   D9 \n" +
-//                    "0          \n" +
-//                    "1          \n" +
-//                    "2  X       \n" +
-//                    "3  |    X  \n" +
-//                    "4  |    |  \n" +
-//                    "5  |    |  \n" +
-//                    "6  |    |  \n",
-//            mm.stringView());
-//
-//    mmOther.addNote(n);
-//    mmOther.addNote(n1);
-//    mmOther.addNote(n2);
-//    assertEquals(" C♯9   D9 \n" +
-//                    "0          \n" +
-//                    "1          \n" +
-//                    "2  X       \n" +
-//                    "3  |    X  \n" +
-//                    "4  |    |  \n" +
-//                    "5  |    |  \n" +
-//                    "6  |    |  \n",
-//            mmOther.stringView());
-//    GenericMusicEditor combine = mm.playSimultaneously(mmOther);
-//    assertEquals(" C♯9   D9 \n" +
-//                    "0          \n" +
-//                    "1          \n" +
-//                    "2  X       \n" +
-//                    "3  |    X  \n" +
-//                    "4  |    |  \n" +
-//                    "5  |    |  \n" +
-//                    "6  |    |  \n",
-//            combine.stringView());
-//
-//    combine.removeNote(n);
-//    combine.removeNote(n1);
-//    combine.removeNote(n2);
-//    assertEquals(" C♯9   D9 \n" +
-//                    "0          \n" +
-//                    "1          \n" +
-//                    "2  X       \n" +
-//                    "3  |    X  \n" +
-//                    "4  |    |  \n" +
-//                    "5  |    |  \n" +
-//                    "6  |    |  \n",
-//            combine.stringView());
-//
-//  }
-//
-//  // to test the method playConsecutively if each piece of music has one note
-//  // and they are of the same tone and the other music model's first notes's downbeat starts at 0
-//  @Test
-//  public void testPlayCosecSameTone() {
-//    List<Note> notes = new ArrayList<Note>();
-//    Note n = new Note(new Tone(Pitch.A, Octave.FOUR), 2, 2);
-//    notes.add(n);
-//    mm.initializeEditor(notes);
-//
-//    List<Note> notesother = new ArrayList<Note>();
-//    Note n1 = new Note(new Tone(Pitch.A, Octave.FOUR), 0, 2);
-//    notesother.add(n1);
-//    mmOther.initializeEditor(notesother);
-//
-//    assertEquals("  A4 \n" +
-//                    "0     \n" +
-//                    "1     \n" +
-//                    "2  X  \n" +
-//                    "3  |  \n" +
-//                    "4  X  \n" +
-//                    "5  |  \n",
-//            mm.playConsecutively(mmOther).stringView());
-//  }
-//
-//  // to test the method playConsecutively if two pieces of music with the same notes are to be
-//  // played consecutively
-//  @Test
-//  public void testPlayConsecSameSong() {
-//    Note n = new Note(new Tone(Pitch.A, Octave.SIX), 4, 3);
-//    Note n1 = new Note(new Tone(Pitch.A, Octave.SIX), 0, 2);
-//    Note n2 = new Note(new Tone(Pitch.A, Octave.SIX), 4, 3);
-//    mm.addNote(n);
-//    mm.addNote(n1);
-//    mmOther.addNote(n2);
-//    GenericMusicEditor together = mm.playConsecutively(mmOther);
-//    assertEquals("   A6 \n" +
-//                    " 0  X  \n" +
-//                    " 1  |  \n" +
-//                    " 2     \n" +
-//                    " 3     \n" +
-//                    " 4  X  \n" +
-//                    " 5  |  \n" +
-//                    " 6  |  \n" +
-//                    " 7     \n" +
-//                    " 8     \n" +
-//                    " 9     \n" +
-//                    "10     \n" +
-//                    "11  X  \n" +
-//                    "12  |  \n" +
-//                    "13  |  \n",
-//            together.stringView());
-//  }
-//
+  // to test the method playSimultaneously when each piece of music has only one note
+  @Test
+  public void testCombineTwoOneNoteOnly() {
+    Note n = new Note(new Tone(Pitch.A, Octave.FOUR), 2, 5);
+    mm.addNote(n);
+    assertEquals("   A4 \n" +
+                    "0     \n" +
+                    "1     \n" +
+                    "2     \n" +
+                    "3     \n" +
+                    "4     \n" +
+                    "5  X  \n" +
+                    "6  |  \n",
+            mm.stringView());
+
+    Note n1 = new Note(new Tone(Pitch.C, Octave.FIVE), 2, 2);
+    mmOther.addNote(n1);
+    assertEquals("   C5 \n" +
+                    "0     \n" +
+                    "1     \n" +
+                    "2  X  \n" +
+                    "3  |  \n",
+            mmOther.stringView());
+
+    assertEquals("   A4  A#4   B4   C5 \n" +
+                    "0                    \n" +
+                    "1                    \n" +
+                    "2                 X  \n" +
+                    "3                 |  \n" +
+                    "4                    \n" +
+                    "5  X                 \n" +
+                    "6  |                 \n",
+            mm.combineSimultaneous(mmOther).stringView());
+  }
+
+  // to test the method playSimultaneously when both models have the same music
+  @Test
+  public void testPlaySameMusicSimul() {
+    Note n = new Note(new Tone(Pitch.CSHARP, Octave.NINE), 3, 4);
+    Note n1 = new Note(new Tone(Pitch.CSHARP, Octave.NINE), 3, 2);
+    Note n2 = new Note(new Tone(Pitch.D, Octave.NINE), 4, 3);
+    mm.addNote(n);
+    mm.addNote(n1);
+    mm.addNote(n2);
+    assertEquals("  C#9   D9 \n" +
+                    "0          \n" +
+                    "1          \n" +
+                    "2  X       \n" +
+                    "3  |    X  \n" +
+                    "4  X    |  \n" +
+                    "5  |    |  \n" +
+                    "6  |    |  \n",
+            mm.stringView());
+
+    mmOther.addNote(n);
+    mmOther.addNote(n1);
+    mmOther.addNote(n2);
+    assertEquals("  C#9   D9 \n" +
+                    "0          \n" +
+                    "1          \n" +
+                    "2  X       \n" +
+                    "3  |    X  \n" +
+                    "4  X    |  \n" +
+                    "5  |    |  \n" +
+                    "6  |    |  \n",
+            mmOther.stringView());
+    MusicEditorModel combine = mm.combineSimultaneous(mmOther);
+    assertEquals("  C#9   D9 \n" +
+                    "0          \n" +
+                    "1          \n" +
+                    "2  X       \n" +
+                    "3  |    X  \n" +
+                    "4  X    |  \n" +
+                    "5  |    |  \n" +
+                    "6  |    |  \n",
+            combine.stringView());
+
+    combine.removeNote(n);
+    combine.removeNote(n1);
+    combine.removeNote(n2);
+    assertEquals("  C#9   D9 \n" +
+                    "0          \n" +
+                    "1          \n" +
+                    "2  X       \n" +
+                    "3  |    X  \n" +
+                    "4  X    |  \n" +
+                    "5  |    |  \n" +
+                    "6  |    |  \n",
+            combine.stringView());
+
+  }
+
+  // to test the method playConsecutively if each piece of music has one note
+  // and they are of the same tone and the other music model's first notes's downbeat starts at 0
+  @Test
+  public void testPlayCosecSameTone() {
+    Note n = new Note(new Tone(Pitch.A, Octave.FOUR), 2, 2);
+    mm.addNote(n);
+
+    Note n1 = new Note(new Tone(Pitch.A, Octave.FOUR), 2, 0);
+    mmOther.addNote(n1);
+
+    assertEquals("   A4 \n" +
+                    "0     \n" +
+                    "1     \n" +
+                    "2  X  \n" +
+                    "3  |  \n" +
+                    "4  X  \n" +
+                    "5  |  \n",
+            mm.combineConsecutive(mmOther).stringView());
+  }
+
+  // to test the method playConsecutively if two pieces of music with the same notes are to be
+  // played consecutively
+  @Test
+  public void testPlayConsecSameSong() {
+    Note n = new Note(new Tone(Pitch.A, Octave.SIX), 3, 4);
+    Note n1 = new Note(new Tone(Pitch.A, Octave.SIX), 2, 0);
+    Note n2 = new Note(new Tone(Pitch.A, Octave.SIX), 3, 4);
+    mm.addNote(n);
+    mm.addNote(n1);
+    mmOther.addNote(n2);
+    MusicEditorModel together = mm.combineConsecutive(mmOther);
+    assertEquals("    A6 \n" +
+                    " 0  X  \n" +
+                    " 1  |  \n" +
+                    " 2     \n" +
+                    " 3     \n" +
+                    " 4  X  \n" +
+                    " 5  |  \n" +
+                    " 6  |  \n" +
+                    " 7     \n" +
+                    " 8     \n" +
+                    " 9     \n" +
+                    "10     \n" +
+                    "11  X  \n" +
+                    "12  |  \n" +
+                    "13  |  \n",
+            together.stringView());
+  }
+
 //  // to test the exception that remove is called before any notes have been added
 //  // to this Music Model
 //  @Test(expected = IllegalArgumentException.class)

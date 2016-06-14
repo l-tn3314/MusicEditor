@@ -16,6 +16,13 @@ public interface MusicEditorModel {
   void addNote(Note note);
 
   /**
+   * Adds the given notes to the music editor
+   *
+   * @param notes to be added to the music editor
+   */
+   void addNotes(Note... notes);
+
+  /**
    * Removes the given note from the music editor
    *
    * @param note to be removed
@@ -54,7 +61,7 @@ public interface MusicEditorModel {
    *
    * @param model whose notes are to be added
    */
-  void combineSimultaneous(MusicEditorModel model);
+  MusicEditorModel combineSimultaneous(MusicEditorModel model);
 
   /**
    * Adds the notes of the given model to this model such that the notes of the given model come
@@ -62,7 +69,7 @@ public interface MusicEditorModel {
    *
    * @param model whose notes are to be added
    */
-  void combineConsecutive(MusicEditorModel model);
+  MusicEditorModel combineConsecutive(MusicEditorModel model);
 
   /**
    * Creates a String representation of this model.
