@@ -93,7 +93,7 @@ public class Note implements Comparable<Note> {
    *
    * @return this note's downbeat
    */
-  public int getDownbeat() {
+public int getDownbeat() {
     return this.downbeat;
   }
 
@@ -134,10 +134,6 @@ public class Note implements Comparable<Note> {
   @Override
   public int compareTo(Note t) {
     return this.tone.compareTo(t.tone);
-  }
-
-  Tone nextTone() {
-    return this.tone.nextTone();
   }
 
   @Override

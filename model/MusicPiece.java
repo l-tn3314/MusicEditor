@@ -137,6 +137,20 @@ public class MusicPiece implements MusicEditorModel {
     return result;
   }
 
+  @Override
+  public List<Tone> getRange() {
+    List<Tone> result = new ArrayList<Tone>();
+    Note[] lowhigh = this.lowestHighest();
+    Tone lowest = lowhigh[0].getTone();
+    Tone highest = lowhigh[1].getTone();
+    while (!lowest.equals(highest)) {
+      result.add(lowest);
+      lowest = this.nextTone(lowest);
+    }
+    result.add(highest);
+    return result;
+  }
+
   /**
    * Removes keys that point to empty Lists in this piece's beatsToNotes
    */
@@ -179,17 +193,53 @@ public class MusicPiece implements MusicEditorModel {
     return arr;
   }
 
+  /**
+   * Returns the Note that comes after this Note chromatically
+   *
+   * @return Note that comes after this Note chromatically
+   */
+  private Tone nextTone(Tone t) {
+    switch(t.getPitch()) {
+      case C:
+        return new Tone(Pitch.CSHARP, t.getOctave());
+      case CSHARP:
+        return new Tone(Pitch.D, t.getOctave());
+      case D:
+        return new Tone(Pitch.DSHARP, t.getOctave());
+      case DSHARP:
+        return new Tone(Pitch.E, t.getOctave());
+      case E:
+        return new Tone(Pitch.F, t.getOctave());
+      case F:
+        return new Tone(Pitch.FSHARP, t.getOctave());
+      case FSHARP:
+        return new Tone(Pitch.G, t.getOctave());
+      case G:
+        return new Tone(Pitch.GSHARP, t.getOctave());
+      case GSHARP:
+        return new Tone(Pitch.A, t.getOctave());
+      case A:
+        return new Tone(Pitch.ASHARP, t.getOctave());
+      case ASHARP:
+        return new Tone(Pitch.B, t.getOctave());
+      case B:
+        Octave[] octaves = t.getOctave().values();
+        return new Tone(Pitch.C, octaves[(t.getOctave().ordinal() + 1) % octaves.length]);
+      default:
+        return null; // never gets here
+    }
+  }
+
   @Override
-  public String stringView() throws IllegalArgumentException {
+  public String stringView() {
     String ans = "";
     if (this.beatsToNotes.isEmpty()) {
       ans = "Add Notes to Start Editing Music!";
     }
     else {
-      Note[] lowhigh = this.lowestHighest();
-      int noteRange = lowhigh[1].compareTo(lowhigh[0]) + 1;
+      List<Tone> toneRange = this.getRange();
       Set<Integer> keys = this.beatsToNotes.keySet();
-      String[][] grid = new String[Collections.max(keys) + 2][noteRange + 1];
+      String[][] grid = new String[Collections.max(keys) + 2][toneRange.size() + 1];
 
       // fills in first row and first column
       int padLeft = Integer.toString(Collections.max(keys)).length();
@@ -201,11 +251,13 @@ public class MusicPiece implements MusicEditorModel {
       for (int i = 0; i < grid.length - 1; i++) {
         grid[i + 1][0] = String.format("%" + Integer.toString(padLeft) + "s", Integer.toString(i));
       }
-      grid[0][1] = String.format("%4s", lowhigh[0]) + " ";
-      Tone n = lowhigh[0].nextTone();
-      for (int j = 2; j < grid[0].length; j++) {
-        grid[0][j] = String.format("%4s", n.toString()) + " ";
-        n = n.nextTone();
+      for (int i = 0; i < toneRange.size(); i++) {
+        if (toneRange.get(i).toString().length() == 4) {
+          grid[0][i + 1] = String.format(" " + "%-4s", toneRange.get(i).toString());
+        }
+        else {
+          grid[0][i + 1] = String.format("%4s", toneRange.get(i).toString()) + " ";
+        }
       }
 
       // placeholders for all other rows and columns
@@ -225,8 +277,8 @@ public class MusicPiece implements MusicEditorModel {
           } else {
             str = "  |  ";
           }
-          if (!grid[i + 1][pn.compareTo(lowhigh[0]) + 1].equals("  X  ")) {
-            grid[i + 1][pn.compareTo(lowhigh[0]) + 1] = str;
+          if (!grid[i + 1][pn.getTone().compareTo(toneRange.get(0)) + 1].equals("  X  ")) {
+            grid[i + 1][pn.getTone().compareTo(toneRange.get(0)) + 1] = str;
           }
         }
       }

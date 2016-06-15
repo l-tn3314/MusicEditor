@@ -72,6 +72,12 @@ public interface MusicEditorModel {
   MusicEditorModel combineConsecutive(MusicEditorModel model);
 
   /**
+   * returns the range of tones of this composition
+   * @return
+   */
+  List<Tone> getRange();
+
+  /**
    * Creates a String representation of this model.
    * Columns are five characters.
    * The leftmost column represents the beats, right-justified.
