@@ -19,7 +19,7 @@ import cs3500.music.util.CompositionBuilder;
  */
 public final class MusicPiece implements MusicEditorModel {
   private int beatsInMeasure; // beats in a measure
-  private int bpm; // beats per minute
+  private int tempo; // tempo
   private Map<Integer, List<Note>> beatsToNotes; // integer does not map to empty list
 
   /**
@@ -27,7 +27,7 @@ public final class MusicPiece implements MusicEditorModel {
    */
   public MusicPiece() {
     this.beatsInMeasure = 4;
-    this.bpm = 120;
+    this.tempo = 200000;
     this.beatsToNotes = new HashMap<Integer, List<Note>>();
   }
 
@@ -35,12 +35,12 @@ public final class MusicPiece implements MusicEditorModel {
    * Constructs a MusicPiece with the given bpm
    *
    * @param beatsInMeasure beats in a measure
-   * @param bpm            beats per minute
+   * @param tempo            in microseconds
    */
-  public MusicPiece(int beatsInMeasure, int bpm) {
+  public MusicPiece(int beatsInMeasure, int tempo) {
     this();
     this.beatsInMeasure = beatsInMeasure;
-    this.bpm = bpm;
+    this.tempo = tempo;
   }
 
   @Override
@@ -301,6 +301,12 @@ public final class MusicPiece implements MusicEditorModel {
     return ans;
   }
 
+  @Override
+  public int getTempo() {
+    return this.tempo;
+  }
+
+
   public static CompositionBuilder<MusicEditorModel> builder() {
     return new MusicPiece.Builder();
   }
@@ -340,7 +346,7 @@ public final class MusicPiece implements MusicEditorModel {
 
     @Override
     public CompositionBuilder<MusicEditorModel> addNote(int start, int end, int instrument, int pitch, int volume) {
-      notes.add(new Note(toTone(pitch), end - start, start));
+      notes.add(new Note(toTone(pitch), end - start, start, instrument, volume));
       return this;
     }
   }

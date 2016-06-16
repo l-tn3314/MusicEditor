@@ -85,7 +85,7 @@ public final class Tone implements Comparable<Tone> {
    *
    * @return the pitch of this tone
    */
-  Pitch getPitch() {
+  public Pitch getPitch() {
     return this.pitch;
   }
 
@@ -94,7 +94,7 @@ public final class Tone implements Comparable<Tone> {
    *
    * @return the octave of this tone
    */
-  Octave getOctave() {
+  public Octave getOctave() {
     return this.octave;
   }
 

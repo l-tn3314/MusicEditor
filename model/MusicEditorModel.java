@@ -88,4 +88,6 @@ public interface MusicEditorModel {
    * @throws IllegalArgumentException if model does not contain notes
    */
   String stringView() throws IllegalArgumentException;
+
+  int getTempo();
 }

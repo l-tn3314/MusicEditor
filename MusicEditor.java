@@ -61,9 +61,15 @@ public class MusicEditor {
 
     //t.display(piece);
     MusicEditorView view = new GuiViewFrame();
-    MusicEditorView midiView = new MidiViewImpl();
-    view.initialize();
-    view.display(piece);
+    MidiViewImpl midiView = new MidiViewImpl();
+    //view.initialize();
+    //view.display(piece);
+    midiView.display(piece);
+//    try {
+//      midiView.playNote();
+//    } catch (InterruptedException e) {
+//      e.printStackTrace();
+//    }
     // You probably need to connect these views to your model, too...
   }
 }

@@ -17,7 +17,23 @@ public class Note implements Comparable<Note> {
   private Tone tone; // column where placed
   private int downbeat; // the starting beat(starts from 0)
   private int duration; // how long each note is played
-  private Boolean playing; // is the note still playing or has it stopped
+  private int instrument;
+  private int volume;
+
+  public Note(Tone tone, int duration, int downbeat, int instrument, int volume) {
+    this.tone = tone;
+    if (this.downbeat < 0) {
+      throw new IllegalArgumentException("Can't have negative downbeat");
+    }
+    this.downbeat = downbeat;
+    if (duration < 1) {
+      throw new IllegalArgumentException("Invalid Duration");
+    }
+    this.duration = duration;
+    this.instrument = instrument;
+    this.volume = volume;
+  }
+
 
   /**
    * To construct a Note
@@ -28,16 +44,7 @@ public class Note implements Comparable<Note> {
    *                 than 1 because a duration of zero or a negative number is not possible
    */
   public Note(Tone tone, int duration, int downbeat) {
-    this.tone = tone;
-    if (this.downbeat < 0) {
-      throw new IllegalArgumentException("Can't have negative downbeat");
-    }
-    this.downbeat = downbeat;
-    if (duration < 1) {
-      throw new IllegalArgumentException("Invalid Duration");
-    }
-    this.duration = duration;
-    this.playing = false; // initialized to be at rest
+    this(tone, duration, downbeat, 1, 70);
   }
 
   //creates a copy
@@ -80,7 +87,7 @@ public class Note implements Comparable<Note> {
    * @return returns a cop of this note's tone
    * @throws IllegalArgumentException if the tone is null
    */
-  Tone getTone() throws IllegalArgumentException {
+  public Tone getTone() throws IllegalArgumentException {
     if (tone == null) {
       throw new IllegalArgumentException("Tone is null");
     } else {
@@ -93,7 +100,7 @@ public class Note implements Comparable<Note> {
    *
    * @return this note's downbeat
    */
-public int getDownbeat() {
+  public int getDownbeat() {
     return this.downbeat;
   }
 
@@ -102,24 +109,16 @@ public int getDownbeat() {
    *
    * @return this notes's duration
    */
-  int getDuration() {
+  public int getDuration() {
     return this.duration;
   }
 
-  /**
-   * Accessor method that returns a boolean to determine if this is playing, or a continuation of a
-   * previous note because it has a long duration.
-   */
-  boolean getPlaying() {
-    return this.playing;
+  public int getInstrument() {
+    return this.instrument;
   }
 
-  /**
-   * Set method that updates the boolean flag playing to true. This method is only called on the
-   * notes after this note to represent it's duration.
-   */
-  void updatePlaying() {
-    playing = true;
+  public int getVolume() {
+    return this.volume;
   }
 
   /**

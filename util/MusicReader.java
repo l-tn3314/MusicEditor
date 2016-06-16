@@ -71,14 +71,18 @@ public class MusicReader {
     MusicEditorModel m = new MusicPiece();
     try {
       // INSERT PATH BELOW
-      m = parseFile(new FileReader("C:\\Users\\Tina\\Documents\\college\\su16\\ood\\intellij\\src\\cs3500\\music\\util\\mystery-1.txt"), em);
+      m = parseFile(new FileReader("C:\\Users\\Tina\\Documents\\college\\su16\\ood\\intellij\\src\\cs3500\\music\\util\\mary-little-lamb.txt"), em);
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
 
-    MusicEditorView view = new GuiViewFrame();
-    //MidiViewImpl midiView = new MidiViewImpl();
-    view.initialize();
-    view.display(m);
+    //MusicEditorView view = new GuiViewFrame();
+    //view.initialize();
+    //view.display(m);
+
+    MidiViewImpl midiView = new MidiViewImpl();
+    midiView.initialize();
+    midiView.display(m);
+
   }
 }
