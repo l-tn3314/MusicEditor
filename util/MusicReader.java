@@ -1,7 +1,12 @@
 package cs3500.music.util;
 
 import cs3500.music.model.*;
+import cs3500.music.view.GuiViewFrame;
+import cs3500.music.view.MidiViewImpl;
+import cs3500.music.view.MusicEditorView;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -59,5 +64,21 @@ public class MusicReader {
     }
 
     return piece.build();
+  }
+
+  public static void main(String[] args) {
+    CompositionBuilder<MusicEditorModel> em = new MusicPiece.Builder();
+    MusicEditorModel m = new MusicPiece();
+    try {
+      // INSERT PATH BELOW
+      m = parseFile(new FileReader("C:\\Users\\Tina\\Documents\\college\\su16\\ood\\intellij\\src\\cs3500\\music\\util\\mystery-1.txt"), em);
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+
+    MusicEditorView view = new GuiViewFrame();
+    //MidiViewImpl midiView = new MidiViewImpl();
+    view.initialize();
+    view.display(m);
   }
 }

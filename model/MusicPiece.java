@@ -2,15 +2,22 @@ package cs3500.music.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
+
+import cs3500.music.MusicEditor;
+import cs3500.music.util.CompositionBuilder;
 
 /**
  * Represents a piece of music
  */
-public class MusicPiece implements MusicEditorModel {
+public final class MusicPiece implements MusicEditorModel {
   private int beatsInMeasure; // beats in a measure
   private int bpm; // beats per minute
   private Map<Integer, List<Note>> beatsToNotes; // integer does not map to empty list
@@ -292,5 +299,49 @@ public class MusicPiece implements MusicEditorModel {
       }
     }
     return ans;
+  }
+
+  public static CompositionBuilder<MusicEditorModel> builder() {
+    return new MusicPiece.Builder();
+  }
+
+  /**
+   * Builder
+   */
+  public static final class Builder implements CompositionBuilder<MusicEditorModel> {
+    int tempo;
+    List<Note> notes;
+
+    public Builder() {
+      tempo = 120;
+      notes = new LinkedList<Note>();
+    }
+
+    @Override
+    public MusicEditorModel build() {
+      MusicEditorModel m = new MusicPiece(4, tempo);
+      for (Note n : notes) {
+        m.addNote(n);
+      }
+      return m;
+    }
+
+    @Override
+    public CompositionBuilder<MusicEditorModel> setTempo(int tempo) {
+      this.tempo = tempo;
+      return this;
+    }
+
+    private Tone toTone(int pitch) {
+      Octave[] octs = Octave.values();
+      Pitch[] pits = Pitch.values();
+      return new Tone(pits[pitch % 12], octs[((pitch - 24) / 12)]);
+    }
+
+    @Override
+    public CompositionBuilder<MusicEditorModel> addNote(int start, int end, int instrument, int pitch, int volume) {
+      notes.add(new Note(toTone(pitch), end - start, start));
+      return this;
+    }
   }
 }
