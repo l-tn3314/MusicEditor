@@ -24,6 +24,7 @@ public class ConcreteGuiViewPanel extends JPanel {
 
   void setModel(MusicEditorModel m) {
     this.model = m;
+    this.revalidate();
     this.repaint();
   }
 
@@ -31,17 +32,20 @@ public class ConcreteGuiViewPanel extends JPanel {
   public void paintComponent(Graphics g) {
     // Handle the default painting
     super.paintComponent(g);
-    // Look for more documentation about the Graphics class,
-    // and methods on it that may be useful
+
+
+    // Measure lines
+
+    g.setColor(new Color(8, 15, 107));
 
     if (model != null) {
       List<Tone> toneRange = model.getRange();
       Map<Integer, List<Note>> notes = model.allNotes();
       int lastBeat = Collections.max(notes.keySet());
 
-      ArrayList<String> orderedTones = new ArrayList<String>();
+      List<String> orderedTones = new ArrayList<String>();
 
-      // Pitches
+      // To render the pitches
       int counter = 0;
       for (int i = toneRange.size() - 1; i >= 0; i--) {
         g.drawString(toneRange.get(counter).toString(), 0, (((i + 1) * GuiViewFrame.SCALE)
@@ -67,21 +71,35 @@ public class ConcreteGuiViewPanel extends JPanel {
         }
       }
 
-      g.setColor(Color.BLACK);
+      g.setColor(new Color(8, 15, 107));
 
       // Measure lines
+      Graphics2D g2D = (Graphics2D)g;
+      g2D.setStroke(new BasicStroke(2));
       for (int j = 0; j <= lastBeat + 1; j += 4) { // CHANGE THIS LATER OKMANG
-        g.drawLine((j + 2) * GuiViewFrame.SCALE, GuiViewFrame.SCALE,
+        g2D.drawLine((j + 2) * GuiViewFrame.SCALE, GuiViewFrame.SCALE,
                 (j + 2) * GuiViewFrame.SCALE, (toneRange.size() + 1) * GuiViewFrame.SCALE);
       }
 
       // Bar lines
-      for(int k = 0; k <= toneRange.size(); k++) {
-        g.drawLine(2 * GuiViewFrame.SCALE, (k + 1) * GuiViewFrame.SCALE,
-                (2 + lastBeat + (4 - (lastBeat % 4))) * GuiViewFrame.SCALE, (k + 1) * GuiViewFrame.SCALE);
+      int original = toneRange.size();
+      g2D.drawLine(2 * GuiViewFrame.SCALE, (original + 1) * GuiViewFrame.SCALE,
+              (2 + lastBeat + (4 - (lastBeat % 4))) * GuiViewFrame.SCALE, (original + 1) * GuiViewFrame.SCALE);
 
 
+
+      for(int k = 0; k < toneRange.size(); k++) {
+          if (orderedTones.get(k).toString().contains("B")) {
+            g2D.setStroke(new BasicStroke(4));
+
+          } else {
+            g2D.setStroke(new BasicStroke(2));
+
+          }
+          g2D.drawLine(2 * GuiViewFrame.SCALE, (k + 1) * GuiViewFrame.SCALE,
+                  (2 + lastBeat + (4 - (lastBeat % 4))) * GuiViewFrame.SCALE, (k + 1) * GuiViewFrame.SCALE);
+        }
       }
     }
   }
-}
+

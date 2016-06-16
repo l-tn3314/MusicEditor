@@ -9,7 +9,7 @@ import cs3500.music.model.MusicEditorModel;
  * A skeleton Frame (i.e., a window) in Swing
  */
 public class GuiViewFrame extends javax.swing.JFrame implements MusicEditorView {
-  static final int SCALE = 20;
+  static final int SCALE = 25;
 
   private final ConcreteGuiViewPanel displayPanel; // You may want to refine this to a subtype of JPanel
 
@@ -33,7 +33,6 @@ public class GuiViewFrame extends javax.swing.JFrame implements MusicEditorView 
   @Override
   public void display(MusicEditorModel m) {
     this.displayPanel.setModel(m);
-    //this.pack();
   }
 
   @Override
