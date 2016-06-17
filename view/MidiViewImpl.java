@@ -1,5 +1,7 @@
 package cs3500.music.view;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,14 +15,14 @@ import cs3500.music.model.Pitch;
 import cs3500.music.model.Tone;
 
 /**
- * A skeleton for MIDI playback
+ * MidiViewImpl
  */
 public class MidiViewImpl implements MusicEditorView {
-  private final Synthesizer synth;
-  private final Receiver receiver;
   private final Sequencer sequencer;
-  private final Transmitter seqTrans;
 
+  /**
+   * Constructs a MidiViewImpl
+   */
   public MidiViewImpl() {
     Synthesizer s = null;
     Receiver r = null;
@@ -28,60 +30,36 @@ public class MidiViewImpl implements MusicEditorView {
     Transmitter t = null;
     try {
       seq = MidiSystem.getSequencer();
-      t = seq.getTransmitter();
-      s = MidiSystem.getSynthesizer();
-      r = s.getReceiver();
-      t.setReceiver(r);
-      s.open();
       seq.open();
     } catch (MidiUnavailableException e) {
       e.printStackTrace();
     }
-    this.synth = s;
-    this.receiver = r;
     this.sequencer = seq;
-    this.seqTrans = t;
   }
+
   /**
-   * Relevant classes and methods from the javax.sound.midi library:
-   * <ul>
-   *  <li>{@link MidiSystem#getSynthesizer()}</li>
-   *  <li>{@link Synthesizer}
-   *    <ul>
-   *      <li>{@link Synthesizer#open()}</li>
-   *      <li>{@link Synthesizer#getReceiver()}</li>
-   *      <li>{@link Synthesizer#getChannels()}</li>
-   *    </ul>
-   *  </li>
-   *  <li>{@link Receiver}
-   *    <ul>
-   *      <li>{@link Receiver#send(MidiMessage, long)}</li>
-   *      <li>{@link Receiver#close()}</li>
-   *    </ul>
-   *  </li>
-   *  <li>{@link MidiMessage}</li>
-   *  <li>{@link ShortMessage}</li>
-   *  <li>{@link MidiChannel}
-   *    <ul>
-   *      <li>{@link MidiChannel#getProgram()}</li>
-   *      <li>{@link MidiChannel#programChange(int)}</li>
-   *    </ul>
-   *  </li>
+   * Relevant classes and methods from the javax.sound.midi library: <ul> <li>{@link
+   * MidiSystem#getSynthesizer()}</li> <li>{@link Synthesizer} <ul> <li>{@link
+   * Synthesizer#open()}</li> <li>{@link Synthesizer#getReceiver()}</li> <li>{@link
+   * Synthesizer#getChannels()}</li> </ul> </li> <li>{@link Receiver} <ul> <li>{@link
+   * Receiver#send(MidiMessage, long)}</li> <li>{@link Receiver#close()}</li> </ul> </li> <li>{@link
+   * MidiMessage}</li> <li>{@link ShortMessage}</li> <li>{@link MidiChannel} <ul> <li>{@link
+   * MidiChannel#getProgram()}</li> <li>{@link MidiChannel#programChange(int)}</li> </ul> </li>
    * </ul>
-   * @see <a href="https://en.wikipedia.org/wiki/General_MIDI">
-   *   https://en.wikipedia.org/wiki/General_MIDI
-   *   </a>
+   *
+   * @see <a href="https://en.wikipedia.org/wiki/General_MIDI"> https://en.wikipedia.org/wiki/General_MIDI
+   * </a>
    */
 
   public void playNote() throws InvalidMidiDataException, InterruptedException {
     MidiMessage start = new ShortMessage(ShortMessage.NOTE_ON, 0, 60, 64);
     MidiMessage stop = new ShortMessage(ShortMessage.NOTE_OFF, 0, 60, 64);
-    this.receiver.send(start, -1); // timestamp of -1 means responding asap
-    this.receiver.send(stop, this.synth.getMicrosecondPosition() + 200000);
-    Thread.sleep(2000);
-    // java util timer or java swing timer to play notes at beats
-    // tempo is how many microseconds per beats
-    this.receiver.close(); // Only call this once you're done playing *all* notes
+//    this.receiver.send(start, -1); // timestamp of -1 means responding asap
+//    this.receiver.send(stop, this.synth.getMicrosecondPosition() + 200000);
+//    Thread.sleep(2000);
+//    // java util timer or java swing timer to play notes at beats
+//    // tempo is how many microseconds per beats
+//    this.receiver.close(); // Only call this once you're done playing *all* notes
   }
 
   @Override
@@ -95,12 +73,12 @@ public class MidiViewImpl implements MusicEditorView {
     }
   }
 
-//  private Tone toTone(int pitch) {
-//    Octave[] octs = Octave.values();
-//    Pitch[] pits = Pitch.values();
-//    return new Tone(pits[pitch % 12], octs[((pitch - 24) / 12)]);
-//  }
-
+  /**
+   * Converts the given tone to a midi pitch
+   *
+   * @param t Tone to be converted
+   * @return midi pitch of given tone
+   */
   private int toMidiPitch(Tone t) {
     Octave[] octs = Octave.values();
     Pitch[] pits = Pitch.values();
@@ -110,9 +88,8 @@ public class MidiViewImpl implements MusicEditorView {
   @Override
   public void display(MusicEditorModel m) {
     sequencer.setTempoInMPQ(m.getTempo());
-    //Sequence s = null;
 
-    int ticksPerBeat = 200000;
+    int ticksPerBeat = 10;
 
     try {
       Sequence s = new Sequence(Sequence.PPQ, ticksPerBeat);
@@ -120,8 +97,8 @@ public class MidiViewImpl implements MusicEditorView {
 
       Map<Integer, List<Note>> notes = m.allNotes();
 
+      // creates list of unique notes
       List<Note> notesList = new ArrayList<Note>();
-
       for (Integer i : notes.keySet()) {
         List<Note> tempNotes = notes.get(i);
         for (Note note : tempNotes) {
@@ -130,16 +107,21 @@ public class MidiViewImpl implements MusicEditorView {
           }
         }
       }
-        //List<Note> notesList = notes.get(i);
-        for (Note n : notesList) {
-          MidiMessage start = new ShortMessage(ShortMessage.NOTE_ON, 0,
-                  toMidiPitch(n.getTone()), n.getVolume());
-          MidiMessage stop = new ShortMessage(ShortMessage.NOTE_OFF, 0,
-                  toMidiPitch(n.getTone()), n.getVolume());
-          t.add(new MidiEvent(start, n.getDownbeat() * ticksPerBeat));
-          t.add(new MidiEvent(stop, (n.getDownbeat() + n.getDuration()) * ticksPerBeat));
-        }
-      //}
+
+      // adds to the track
+      for (Note n : notesList) {
+        MidiMessage start = new ShortMessage(ShortMessage.NOTE_ON, 0,
+                toMidiPitch(n.getTone()), n.getVolume());
+        MidiMessage stop = new ShortMessage(ShortMessage.NOTE_OFF, 0,
+                toMidiPitch(n.getTone()), n.getVolume());
+
+
+        MidiEvent st = new MidiEvent(start, n.getDownbeat() * ticksPerBeat);
+        MidiEvent sp = new MidiEvent(stop, (n.getDownbeat() + n.getDuration()) * ticksPerBeat);
+
+        t.add(st);
+        t.add(sp);
+      }
 
       sequencer.setSequence(s);
 
@@ -147,23 +129,6 @@ public class MidiViewImpl implements MusicEditorView {
       e.printStackTrace();
     }
     sequencer.start();
-    //sequencer.close();
-    //receiver.close();
-
-//    try {
-//      MidiMessage start = new ShortMessage(ShortMessage.NOTE_ON, 0, 60, 64);
-//      MidiMessage stop = new ShortMessage(ShortMessage.NOTE_OFF, 0, 60, 64);
-//      this.receiver.send(start, -1); // timestamp of -1 means responding asap
-//      this.receiver.send(stop, this.synth.getMicrosecondPosition() + 200000);
-//
-//      Thread.sleep(2000);
-//      // java util timer or java swing timer to play notes at beats
-//      // tempo is how many microseconds per beats
-//      this.receiver.close(); // Only call this once you're done playing *all* notes
-//    } catch (InvalidMidiDataException e) {
-//      e.printStackTrace();
-//    } catch (InterruptedException e) {
-//      e.printStackTrace();
-//    }
   }
+
 }

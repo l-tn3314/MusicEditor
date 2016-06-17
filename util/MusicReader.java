@@ -71,7 +71,7 @@ public class MusicReader {
     MusicEditorModel m = new MusicPiece();
     try {
       // INSERT PATH BELOW
-      m = parseFile(new FileReader("C:\\Users\\Tina\\Documents\\college\\su16\\ood\\intellij\\src\\cs3500\\music\\util\\mary-little-lamb.txt"), em);
+      m = parseFile(new FileReader("C:\\Users\\Tina\\Documents\\college\\su16\\ood\\intellij\\src\\cs3500\\music\\util\\lnl.txt"), em);
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
