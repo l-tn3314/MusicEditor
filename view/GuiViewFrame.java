@@ -2,6 +2,8 @@ package cs3500.music.view;
 
 import java.awt.*;
 
+import javax.swing.*;
+
 import cs3500.music.model.MusicEditorModel;
 
 
@@ -18,17 +20,31 @@ public class GuiViewFrame extends javax.swing.JFrame implements MusicEditorView 
    */
   public GuiViewFrame() {
     this.setTitle("Music Editor!");
-    this.displayPanel = new ConcreteGuiViewPanel();
+    setSize(300, 300);
+    this.displayPanel = new ConcreteGuiViewPanel(300, 300);
+    //this.displayPanel.setPreferredSize(new Dimension(5000, 500));
+    //JScrollPane scrollPane = new JScrollPane(this.displayPanel);
+    //scrollPane.setBackground(new Color(236, 236, 236));
+
     this.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
     this.getContentPane().add(displayPanel);
-    this.displayPanel.setBackground(new Color(236, 236, 236));
+    //this.displayPanel.setBackground(new Color(236, 236, 236));
+    //JScrollPane scrollPane = new JScrollPane(this.displayPanel);
+    JScrollPane scrollPane = new JScrollPane(displayPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    scrollPane.setPreferredSize(new Dimension(200, 200));
+    this.add(scrollPane);
+    scrollPane.revalidate();
     this.pack();
   }
+
 
   @Override
   public void initialize(){
     this.setVisible(true);
+    //this.setResizable(false);
   }
+
 
   @Override
   public void display(MusicEditorModel m) {

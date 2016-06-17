@@ -12,14 +12,20 @@ import cs3500.music.model.MusicEditorModel;
 import cs3500.music.model.Note;
 import cs3500.music.model.Tone;
 
+import static cs3500.music.view.GuiViewFrame.SCALE;
+
 /**
  * A dummy view that simply draws a string 
  */
 public class ConcreteGuiViewPanel extends JPanel {
   private MusicEditorModel model;
+  int width;
+  int height;
 
-  ConcreteGuiViewPanel() {
-    // Filler
+  ConcreteGuiViewPanel(int width, int height) {
+    super();
+    this.width = width;
+    this.height = height;
   }
 
   void setModel(MusicEditorModel m) {
@@ -33,9 +39,6 @@ public class ConcreteGuiViewPanel extends JPanel {
     // Handle the default painting
     super.paintComponent(g);
 
-
-    // Measure lines
-
     g.setColor(new Color(8, 15, 107));
 
     if (model != null) {
@@ -48,12 +51,11 @@ public class ConcreteGuiViewPanel extends JPanel {
       // To render the pitches
       int counter = 0;
       for (int i = toneRange.size() - 1; i >= 0; i--) {
-        g.drawString(toneRange.get(counter).toString(), 0, (((i + 1) * GuiViewFrame.SCALE)
-                + (3 * GuiViewFrame.SCALE / 4)));
+        g.drawString(toneRange.get(counter).toString(), 0, (((i + 1) * SCALE)
+                + (3 * SCALE / 4)));
         counter++;
         orderedTones.add(toneRange.get(i).toString());
       }
-
 
       // Notes
       for(int l : notes.keySet()) {
@@ -65,8 +67,8 @@ public class ConcreteGuiViewPanel extends JPanel {
           else {
             g.setColor(Color.CYAN);
           }
-          g.fillRect((l + 2) * GuiViewFrame.SCALE, (1 + orderedTones.indexOf(n.toString())) * GuiViewFrame.SCALE,
-                  GuiViewFrame.SCALE, GuiViewFrame.SCALE);
+          g.fillRect((l + 2) * SCALE, (1 + orderedTones.indexOf(n.toString())) * SCALE,
+                  SCALE, SCALE);
 
         }
       }
@@ -76,17 +78,19 @@ public class ConcreteGuiViewPanel extends JPanel {
       // Measure lines
       Graphics2D g2D = (Graphics2D)g;
       g2D.setStroke(new BasicStroke(2));
-      for (int j = 0; j <= lastBeat + 1; j += 4) { // CHANGE THIS LATER OKMANG
-        g2D.drawLine((j + 2) * GuiViewFrame.SCALE, GuiViewFrame.SCALE,
-                (j + 2) * GuiViewFrame.SCALE, (toneRange.size() + 1) * GuiViewFrame.SCALE);
+      for (int j = 0; j <= lastBeat + 1; j += 4) {
+        g.drawString(Integer.toString(j), ((j + 2) * SCALE) - (2 * Integer.toString(j).length()), (3 * SCALE) / 4);
+        g2D.drawLine((j + 2) * SCALE, SCALE,
+                (j + 2) * SCALE, (toneRange.size() + 1) * SCALE);
       }
+      this.width = (lastBeat + 4) * SCALE;
+      this.height = (toneRange.size() + 2) * SCALE;
+
 
       // Bar lines
       int original = toneRange.size();
-      g2D.drawLine(2 * GuiViewFrame.SCALE, (original + 1) * GuiViewFrame.SCALE,
-              (2 + lastBeat + (4 - (lastBeat % 4))) * GuiViewFrame.SCALE, (original + 1) * GuiViewFrame.SCALE);
-
-
+      g2D.drawLine(2 * SCALE, (original + 1) * SCALE,
+              (2 + lastBeat + (4 - (lastBeat % 4))) * SCALE, (original + 1) * SCALE);
 
       for(int k = 0; k < toneRange.size(); k++) {
           if (orderedTones.get(k).toString().contains("B")) {
@@ -96,10 +100,11 @@ public class ConcreteGuiViewPanel extends JPanel {
             g2D.setStroke(new BasicStroke(2));
 
           }
-          g2D.drawLine(2 * GuiViewFrame.SCALE, (k + 1) * GuiViewFrame.SCALE,
-                  (2 + lastBeat + (4 - (lastBeat % 4))) * GuiViewFrame.SCALE, (k + 1) * GuiViewFrame.SCALE);
+          g2D.drawLine(2 * SCALE, (k + 1) * SCALE,
+                  (2 + lastBeat + (4 - (lastBeat % 4))) * SCALE, (k + 1) * SCALE);
         }
       }
-    }
+    setPreferredSize(new Dimension(width, height));
   }
+}
 
