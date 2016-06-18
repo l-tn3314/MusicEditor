@@ -35,16 +35,24 @@ public class MidiViewImpl implements MusicEditorView<Note> {
    * Constructs a MidiViewImpl
    */
   public MidiViewImpl() {
-    Synthesizer s = null;
-    Receiver r = null;
     Sequencer seq = null;
-    Transmitter t = null;
     try {
+      Synthesizer syn = MidiSystem.getSynthesizer();
+      syn.loadAllInstruments(syn.getDefaultSoundbank());
       seq = MidiSystem.getSequencer();
       seq.open();
     } catch (MidiUnavailableException e) {
       e.printStackTrace();
     }
+    this.sequencer = seq;
+  }
+
+  /**
+   * Constructors a MidiViewImpl for testing
+   *
+   * @param seq mock sequencer to be used
+   */
+  public MidiViewImpl(Sequencer seq) {
     this.sequencer = seq;
   }
 
@@ -61,7 +69,6 @@ public class MidiViewImpl implements MusicEditorView<Note> {
    * @see <a href="https://en.wikipedia.org/wiki/General_MIDI"> https://en.wikipedia.org/wiki/General_MIDI
    * </a>
    */
-
   public void playNote() throws InvalidMidiDataException, InterruptedException {
     MidiMessage start = new ShortMessage(ShortMessage.NOTE_ON, 0, 60, 64);
     MidiMessage stop = new ShortMessage(ShortMessage.NOTE_OFF, 0, 60, 64);
@@ -121,15 +128,19 @@ public class MidiViewImpl implements MusicEditorView<Note> {
 
       // adds to the track
       for (Note n : notesList) {
+        MidiMessage instr = new ShortMessage(ShortMessage.PROGRAM_CHANGE, 0,
+                n.getInstrument(), 0);
+        MidiEvent ins = new MidiEvent(instr, n.getDownbeat() * ticksPerBeat);
+
         MidiMessage start = new ShortMessage(ShortMessage.NOTE_ON, 0,
                 toMidiPitch(n.getTone()), n.getVolume());
         MidiMessage stop = new ShortMessage(ShortMessage.NOTE_OFF, 0,
                 toMidiPitch(n.getTone()), n.getVolume());
 
-
         MidiEvent st = new MidiEvent(start, n.getDownbeat() * ticksPerBeat);
         MidiEvent sp = new MidiEvent(stop, (n.getDownbeat() + n.getDuration()) * ticksPerBeat);
 
+        t.add(ins);
         t.add(st);
         t.add(sp);
       }
