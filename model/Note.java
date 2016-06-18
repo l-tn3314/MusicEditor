@@ -20,7 +20,18 @@ public class Note implements Comparable<Note> {
   private int instrument;
   private int volume;
 
-  public Note(Tone tone, int duration, int downbeat, int instrument, int volume) {
+  /**
+   * Constructs a Note
+   *
+   * @param tone       the pitch and octave of this Note
+   * @param duration   how long this Note is played for
+   * @param downbeat   the first beat this Note is played on
+   * @param instrument instrument that plays this Note
+   * @param volume     volume of this Note
+   * @throws IllegalArgumentException if downbeat or duration is less than 1
+   */
+  public Note(Tone tone, int duration, int downbeat, int instrument, int volume)
+          throws IllegalArgumentException {
     this.tone = tone;
     if (this.downbeat < 0) {
       throw new IllegalArgumentException("Can't have negative downbeat");
@@ -38,8 +49,8 @@ public class Note implements Comparable<Note> {
   /**
    * To construct a Note
    *
-   * @param tone     the pitch and octave of this note
-   * @param downbeat the first beat this note is played on
+   * @param tone     the pitch and octave of this Note
+   * @param downbeat the first beat this Note is played on
    * @param duration how long this Note is played for. The input is restricted to numbers greater
    *                 than 1 because a duration of zero or a negative number is not possible
    */
@@ -47,7 +58,11 @@ public class Note implements Comparable<Note> {
     this(tone, duration, downbeat, 1, 70);
   }
 
-  //creates a copy
+  /**
+   * Constructs a copy of the given Note
+   *
+   * @param note Note to be copied
+   */
   public Note(Note note) {
     this(new Tone(note.tone.getPitch(), note.tone.getOctave()), note.downbeat, note.duration);
   }
@@ -113,10 +128,20 @@ public class Note implements Comparable<Note> {
     return this.duration;
   }
 
+  /**
+   * Accessor method that returns the instrument of this note to be accessed outside of this class
+   *
+   * @return this notes's instrument
+   */
   public int getInstrument() {
     return this.instrument;
   }
 
+  /**
+   * Accessor method that returns the volume of this note to be accessed outside of this class
+   *
+   * @return this notes's volume
+   */
   public int getVolume() {
     return this.volume;
   }

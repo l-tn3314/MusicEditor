@@ -10,15 +10,21 @@ import cs3500.music.view.TextViewImpl;
  */
 public class ViewCreator {
 
+  /**
+   * Creates a View based on the given String ("console", "visual", "midi")
+   *
+   * @param type of View to be created
+   * @return created View
+   */
   public static MusicEditorView create(String type) {
-    switch(type) {
-      case "console" :
+    switch (type) {
+      case "console":
         return new TextViewImpl();
 
-      case "visual" :
+      case "visual":
         return new GuiViewFrame();
 
-      case "midi" :
+      case "midi":
         return new MidiViewImpl();
       default:
         throw new IllegalArgumentException("This view type does not exist");

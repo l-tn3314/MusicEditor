@@ -10,24 +10,36 @@ import javax.swing.*;
 
 import cs3500.music.model.MusicEditorModel;
 import cs3500.music.model.Note;
+import cs3500.music.model.ReadOnlyModel;
 
 import static cs3500.music.view.GuiViewFrame.SCALE;
 
 /**
- * A dummy view that simply draws a string 
+ * JPanel that displays the notes stored in a model
  */
 public class ConcreteGuiViewPanel extends JPanel {
-  private MusicEditorModel model;
+  private ReadOnlyModel<Note> model;
   int width;
   int height;
 
+  /**
+   * Constructs a ConcreteGuiViewPanel with the given width and height
+   *
+   * @param width  width of this panel
+   * @param height height of this panel
+   */
   ConcreteGuiViewPanel(int width, int height) {
     super();
     this.width = width;
     this.height = height;
   }
 
-  void setModel(MusicEditorModel m) {
+  /**
+   * Sets the model for this panel
+   *
+   * @param m model to be displayed
+   */
+  void setModel(ReadOnlyModel<Note> m) {
     this.model = m;
     this.revalidate();
     this.repaint();
@@ -57,13 +69,12 @@ public class ConcreteGuiViewPanel extends JPanel {
       }
 
       // Notes
-      for(int l : notes.keySet()) {
+      for (int l : notes.keySet()) {
         List<Note> beatNotes = notes.get(l);
-        for(Note n: beatNotes) {
-          if(n.getDownbeat() == l) {
+        for (Note n : beatNotes) {
+          if (n.getDownbeat() == l) {
             g.setColor(Color.BLACK);
-            }
-          else {
+          } else {
             g.setColor(Color.CYAN);
           }
           g.fillRect((l + 2) * SCALE, (1 + orderedTones.indexOf(n.toString())) * SCALE,
@@ -75,7 +86,7 @@ public class ConcreteGuiViewPanel extends JPanel {
       g.setColor(new Color(8, 15, 107));
 
       // Measure lines
-      Graphics2D g2D = (Graphics2D)g;
+      Graphics2D g2D = (Graphics2D) g;
       g2D.setStroke(new BasicStroke(2));
       for (int j = 0; j <= lastBeat + 1; j += 4) {
         g.drawString(Integer.toString(j), ((j + 2) * SCALE) - (2 * Integer.toString(j).length()), (3 * SCALE) / 4);
@@ -85,24 +96,23 @@ public class ConcreteGuiViewPanel extends JPanel {
       this.width = (lastBeat + 4) * SCALE;
       this.height = (noteRange.size() + 2) * SCALE;
 
-
       // Bar lines
       int original = noteRange.size();
       g2D.drawLine(2 * SCALE, (original + 1) * SCALE,
               (2 + lastBeat + (4 - (lastBeat % 4))) * SCALE, (original + 1) * SCALE);
 
-      for(int k = 0; k < noteRange.size(); k++) {
-          if (orderedTones.get(k).toString().contains("B")) {
-            g2D.setStroke(new BasicStroke(4));
+      for (int k = 0; k < noteRange.size(); k++) {
+        if (orderedTones.get(k).toString().contains("B")) {
+          g2D.setStroke(new BasicStroke(4));
 
-          } else {
-            g2D.setStroke(new BasicStroke(2));
+        } else {
+          g2D.setStroke(new BasicStroke(2));
 
-          }
-          g2D.drawLine(2 * SCALE, (k + 1) * SCALE,
-                  (2 + lastBeat + (4 - (lastBeat % 4))) * SCALE, (k + 1) * SCALE);
         }
+        g2D.drawLine(2 * SCALE, (k + 1) * SCALE,
+                (2 + lastBeat + (4 - (lastBeat % 4))) * SCALE, (k + 1) * SCALE);
       }
+    }
     setPreferredSize(new Dimension(width, height));
   }
 }

@@ -22,10 +22,11 @@ import cs3500.music.model.MusicEditorModel;
 import cs3500.music.model.Note;
 import cs3500.music.model.Octave;
 import cs3500.music.model.Pitch;
+import cs3500.music.model.ReadOnlyModel;
 import cs3500.music.model.Tone;
 
 /**
- * MidiViewImpl
+ * Midi view implementation
  */
 public class MidiViewImpl implements MusicEditorView<Note> {
   private final Sequencer sequencer;
@@ -70,7 +71,7 @@ public class MidiViewImpl implements MusicEditorView<Note> {
 //    // java util timer or java swing timer to play notes at beats
 //    // tempo is how many microseconds per beats
 //    this.receiver.close(); // Only call this once you're done playing *all* notes
-  }
+    }
 
   @Override
   public void initialize() {
@@ -96,7 +97,7 @@ public class MidiViewImpl implements MusicEditorView<Note> {
   }
 
   @Override
-  public void display(MusicEditorModel<Note> m) {
+  public void display(ReadOnlyModel<Note> m) {
     sequencer.setTempoInMPQ(m.getTempo());
 
     int ticksPerBeat = 10;

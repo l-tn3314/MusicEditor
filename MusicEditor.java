@@ -14,8 +14,11 @@ import cs3500.music.util.MusicReader;
 import cs3500.music.util.ViewCreator;
 import cs3500.music.view.MusicEditorView;
 
-
+/**
+ * Music editor
+ */
 public class MusicEditor {
+
   public static void main(String[] args) throws IOException, InvalidMidiDataException {
     CompositionBuilder<MusicEditorModel> em = new MusicPiece.Builder();
     MusicEditorModel m = new MusicPiece();
@@ -30,6 +33,4 @@ public class MusicEditor {
     view.initialize();
     view.display(m);
   }
-
-
 }

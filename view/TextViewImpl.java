@@ -10,17 +10,21 @@ import cs3500.music.model.MusicPiece;
 import cs3500.music.model.Note;
 import cs3500.music.model.Octave;
 import cs3500.music.model.Pitch;
+import cs3500.music.model.ReadOnlyModel;
 import cs3500.music.model.Tone;
 
+/**
+ * Text view implementation
+ */
 public class TextViewImpl implements MusicEditorView<Note> {
+
   @Override
   public void initialize() {
-    //PUT SOMETHING HERE MAYBE????
   }
 
 
   @Override
-  public void display(MusicEditorModel<Note> m) {
+  public void display(ReadOnlyModel<Note> m) {
     String ans = "";
     if (m.allNotes().isEmpty()) {
       ans = "Add Notes to Start Editing Music!";

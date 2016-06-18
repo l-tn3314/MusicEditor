@@ -14,15 +14,13 @@ import cs3500.music.util.CompositionBuilder;
  * Represents a piece of music
  */
 public final class MusicPiece implements MusicEditorModel<Note> {
-  private int beatsInMeasure; // beats in a measure
-  private int tempo; // tempo
+  private int tempo; // tempo in microseconds per beat
   private Map<Integer, List<Note>> beatsToNotes; // integer does not map to empty list
 
   /**
-   * Constructs a MusicPiece
+   * Constructs a MusicPiece with a default of 200000 microseconds per beat
    */
   public MusicPiece() {
-    this.beatsInMeasure = 4;
     this.tempo = 200000;
     this.beatsToNotes = new HashMap<Integer, List<Note>>();
   }
@@ -30,12 +28,10 @@ public final class MusicPiece implements MusicEditorModel<Note> {
   /**
    * Constructs a MusicPiece with the given bpm
    *
-   * @param beatsInMeasure beats in a measure
    * @param tempo            in microseconds
    */
-  public MusicPiece(int beatsInMeasure, int tempo) {
+  public MusicPiece(int tempo) {
     this();
-    this.beatsInMeasure = beatsInMeasure;
     this.tempo = tempo;
   }
 
@@ -61,6 +57,19 @@ public final class MusicPiece implements MusicEditorModel<Note> {
     }
   }
 
+  /**
+   * Removes keys that point to empty Lists in this piece's beatsToNotes
+   */
+  private void cleanEmptyKeys() {
+    Map<Integer, List<Note>> temp = new HashMap(this.beatsToNotes);
+    Set<Integer> keys = temp.keySet();
+    for (Integer i : keys) {
+      if (this.beatsToNotes.get(i).isEmpty()) {
+        this.beatsToNotes.remove(i);
+      }
+    }
+  }
+
   @Override
   public boolean removeNote(Note n) {
     int noteBeat = n.getDownbeat();
@@ -83,8 +92,7 @@ public final class MusicPiece implements MusicEditorModel<Note> {
     if (beat < 0) {
       throw new IllegalArgumentException("Beat cannot be less than zero!");
     }
-    boolean temp = this.beatsToNotes.remove(beat) != null;
-    return temp;
+    return this.beatsToNotes.remove(beat) != null;
   }
 
   @Override
@@ -139,34 +147,6 @@ public final class MusicPiece implements MusicEditorModel<Note> {
     }
     return result;
   }
-
-  @Override
-  public List<Note> getRange() {
-    List<Note> result = new ArrayList<Note>();
-    Note[] lowhigh = this.lowestHighest();
-    Tone lowest = lowhigh[0].getTone();
-    Tone highest = lowhigh[1].getTone();
-    while (!lowest.equals(highest)) {
-      result.add(new Note(lowest, 1, 1));
-      lowest = this.nextTone(lowest);
-    }
-    result.add(new Note(highest, 1, 1));
-    return result;
-  }
-
-  /**
-   * Removes keys that point to empty Lists in this piece's beatsToNotes
-   */
-  private void cleanEmptyKeys() {
-    Map<Integer, List<Note>> temp = new HashMap(this.beatsToNotes);
-    Set<Integer> keys = temp.keySet();
-    for (Integer i : keys) {
-      if (this.beatsToNotes.get(i).isEmpty()) {
-        this.beatsToNotes.remove(i);
-      }
-    }
-  }
-
 
   /**
    * Creates a two-element array containing the lowest and highest note
@@ -234,30 +214,51 @@ public final class MusicPiece implements MusicEditorModel<Note> {
   }
 
   @Override
+  public List<Note> getRange() {
+    List<Note> result = new ArrayList<Note>();
+    Note[] lowhigh = this.lowestHighest();
+    Tone lowest = lowhigh[0].getTone();
+    Tone highest = lowhigh[1].getTone();
+    while (!lowest.equals(highest)) {
+      result.add(new Note(lowest, 1, 1));
+      lowest = this.nextTone(lowest);
+    }
+    result.add(new Note(highest, 1, 1));
+    return result;
+  }
+
+  @Override
   public int getTempo() {
     return this.tempo;
   }
 
-
+  /**
+   * Returns a Builder for MusicPiece
+   *
+   * @return Builder for MusicPiece
+   */
   public static CompositionBuilder<MusicEditorModel> builder() {
     return new MusicPiece.Builder();
   }
 
   /**
-   * Builder
+   * Builder for MusicPiece
    */
   public static final class Builder implements CompositionBuilder<MusicEditorModel> {
     int tempo;
     List<Note> notes;
 
+    /**
+     * Constructs a Builder with a default tempo of 200000 microseconds per beat
+     */
     public Builder() {
-      tempo = 120;
+      tempo = 200000;
       notes = new LinkedList<Note>();
     }
 
     @Override
     public MusicEditorModel build() {
-      MusicEditorModel m = new MusicPiece(4, tempo);
+      MusicEditorModel m = new MusicPiece(tempo);
       for (Note n : notes) {
         m.addNote(n);
       }
@@ -270,6 +271,12 @@ public final class MusicPiece implements MusicEditorModel<Note> {
       return this;
     }
 
+    /**
+     * Converts the given midi pitch to a Tone
+     *
+     * @param pitch midi pitch to be converted
+     * @return Tone of the given midi pitch
+     */
     private Tone toTone(int pitch) {
       Octave[] octs = Octave.values();
       Pitch[] pits = Pitch.values();

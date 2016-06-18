@@ -98,5 +98,5 @@ public final class Tone implements Comparable<Tone> {
     return this.octave;
   }
 
-  }
+}
 
