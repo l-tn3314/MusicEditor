@@ -1,12 +1,22 @@
 package cs3500.music.view;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.sound.midi.*;
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiChannel;
+import javax.sound.midi.MidiEvent;
+import javax.sound.midi.MidiMessage;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Receiver;
+import javax.sound.midi.Sequence;
+import javax.sound.midi.Sequencer;
+import javax.sound.midi.ShortMessage;
+import javax.sound.midi.Synthesizer;
+import javax.sound.midi.Track;
+import javax.sound.midi.Transmitter;
 
 import cs3500.music.model.MusicEditorModel;
 import cs3500.music.model.Note;
@@ -17,7 +27,7 @@ import cs3500.music.model.Tone;
 /**
  * MidiViewImpl
  */
-public class MidiViewImpl implements MusicEditorView {
+public class MidiViewImpl implements MusicEditorView<Note> {
   private final Sequencer sequencer;
 
   /**
@@ -86,7 +96,7 @@ public class MidiViewImpl implements MusicEditorView {
   }
 
   @Override
-  public void display(MusicEditorModel m) {
+  public void display(MusicEditorModel<Note> m) {
     sequencer.setTempoInMPQ(m.getTempo());
 
     int ticksPerBeat = 10;

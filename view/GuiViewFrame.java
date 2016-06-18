@@ -5,12 +5,13 @@ import java.awt.*;
 import javax.swing.*;
 
 import cs3500.music.model.MusicEditorModel;
+import cs3500.music.model.Note;
 
 
 /**
  * A skeleton Frame (i.e., a window) in Swing
  */
-public class GuiViewFrame extends javax.swing.JFrame implements MusicEditorView {
+public class GuiViewFrame extends javax.swing.JFrame implements MusicEditorView<Note> {
   static final int SCALE = 25;
 
   private final ConcreteGuiViewPanel displayPanel; // You may want to refine this to a subtype of JPanel
@@ -47,7 +48,7 @@ public class GuiViewFrame extends javax.swing.JFrame implements MusicEditorView 
 
 
   @Override
-  public void display(MusicEditorModel m) {
+  public void display(MusicEditorModel<Note> m) {
     this.displayPanel.setModel(m);
   }
 

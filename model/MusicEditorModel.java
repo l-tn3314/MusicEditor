@@ -6,21 +6,21 @@ import java.util.Map;
 /**
  * Music editor
  */
-public interface MusicEditorModel {
+public interface MusicEditorModel<N> {
 
   /**
    * Adds the given note to the music editor
    *
    * @param note to be added to the music editor
    */
-  void addNote(Note note);
+  void addNote(N note);
 
   /**
    * Adds the given notes to the music editor
    *
    * @param notes to be added to the music editor
    */
-   void addNotes(Note... notes);
+   void addNotes(N... notes);
 
   /**
    * Removes the given note from the music editor
@@ -28,7 +28,7 @@ public interface MusicEditorModel {
    * @param note to be removed
    * @return true if given note is successfully removed, false if not present
    */
-  boolean removeNote(Note note);
+  boolean removeNote(N note);
 
   /**
    * Removes all notes that start on the given beat
@@ -46,7 +46,7 @@ public interface MusicEditorModel {
    * @return list of all PlayedNotes on the given beat
    * @throws IllegalArgumentException if given beat is less than one
    */
-  List<Note> notesAt(int beat) throws IllegalArgumentException;
+  List<N> notesAt(int beat) throws IllegalArgumentException;
 
   /**
    * Returns a Map of all PlayedNotes in the music editor, where Integer represents the beat and
@@ -54,7 +54,7 @@ public interface MusicEditorModel {
    *
    * @return List of all PlayedNotes in the music editor
    */
-  Map<Integer, List<Note>> allNotes();
+  Map<Integer, List<N>> allNotes();
 
   /**
    * Adds the notes of the given model to this model
@@ -75,19 +75,12 @@ public interface MusicEditorModel {
    * returns the range of tones of this composition
    * @return
    */
-  List<Tone> getRange();
+  List<N> getRange();
 
   /**
-   * Creates a String representation of this model.
-   * Columns are five characters.
-   * The leftmost column represents the beats, right-justified.
-   * The top row represents each pitch.
-   * Each note head is "  X  " and each note-sustain is "  |  ".
+   * Returns the tempo(in microseconds) of this model
    *
-   * @return String representation of this model
-   * @throws IllegalArgumentException if model does not contain notes
+   * @return tempo(in microseconds) of this model
    */
-  String stringView() throws IllegalArgumentException;
-
   int getTempo();
 }

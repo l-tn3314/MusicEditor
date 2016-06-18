@@ -3,8 +3,9 @@ package cs3500.music.view;
 import cs3500.music.model.MusicEditorModel;
 
 // to create the views for this
-public interface MusicEditorView {
-void initialize();
+public interface MusicEditorView<N> {
 
-  void display(MusicEditorModel m);
+  void initialize();
+
+  void display(MusicEditorModel<N> m);
 }

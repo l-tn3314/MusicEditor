@@ -12,7 +12,7 @@ import cs3500.music.model.Octave;
 import cs3500.music.model.Pitch;
 import cs3500.music.model.Tone;
 
-public class TextViewImpl implements MusicEditorView {
+public class TextViewImpl implements MusicEditorView<Note> {
   @Override
   public void initialize() {
     //PUT SOMETHING HERE MAYBE????
@@ -20,15 +20,15 @@ public class TextViewImpl implements MusicEditorView {
 
 
   @Override
-  public void display(MusicEditorModel m) {
+  public void display(MusicEditorModel<Note> m) {
     String ans = "";
     if (m.allNotes().isEmpty()) {
       ans = "Add Notes to Start Editing Music!";
     }
     else {
-      List<Tone> toneRange = m.getRange();
+      List<Note> noteRange = m.getRange();
       Set<Integer> keys = m.allNotes().keySet();
-      String[][] grid = new String[Collections.max(keys) + 2][toneRange.size() + 1];
+      String[][] grid = new String[Collections.max(keys) + 2][noteRange.size() + 1];
 
       // fills in first row and first column
       int padLeft = Integer.toString(Collections.max(keys)).length();
@@ -40,12 +40,12 @@ public class TextViewImpl implements MusicEditorView {
       for (int i = 0; i < grid.length - 1; i++) {
         grid[i + 1][0] = String.format("%" + Integer.toString(padLeft) + "s", Integer.toString(i));
       }
-      for (int i = 0; i < toneRange.size(); i++) {
-        if (toneRange.get(i).toString().length() == 4) {
-          grid[0][i + 1] = String.format(" " + "%-4s", toneRange.get(i).toString());
+      for (int i = 0; i < noteRange.size(); i++) {
+        if (noteRange.get(i).toString().length() == 4) {
+          grid[0][i + 1] = String.format(" " + "%-4s", noteRange.get(i).toString());
         }
         else {
-          grid[0][i + 1] = String.format("%4s", toneRange.get(i).toString()) + " ";
+          grid[0][i + 1] = String.format("%4s", noteRange.get(i).toString()) + " ";
         }
       }
 
@@ -66,8 +66,8 @@ public class TextViewImpl implements MusicEditorView {
           } else {
             str = "  |  ";
           }
-          if (!grid[i + 1][pn.compareTo(new Note(toneRange.get(0), 1, 1)) + 1].equals("  X  ")) {
-            grid[i + 1][pn.compareTo(new Note(toneRange.get(0), 1, 1)) + 1] = str;
+          if (!grid[i + 1][pn.compareTo(noteRange.get(0)) + 1].equals("  X  ")) {
+            grid[i + 1][pn.compareTo(noteRange.get(0)) + 1] = str;
           }
         }
       }

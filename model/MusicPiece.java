@@ -2,22 +2,18 @@ package cs3500.music.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Deque;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 
-import cs3500.music.MusicEditor;
 import cs3500.music.util.CompositionBuilder;
 
 /**
  * Represents a piece of music
  */
-public final class MusicPiece implements MusicEditorModel {
+public final class MusicPiece implements MusicEditorModel<Note> {
   private int beatsInMeasure; // beats in a measure
   private int tempo; // tempo
   private Map<Integer, List<Note>> beatsToNotes; // integer does not map to empty list
@@ -145,16 +141,16 @@ public final class MusicPiece implements MusicEditorModel {
   }
 
   @Override
-  public List<Tone> getRange() {
-    List<Tone> result = new ArrayList<Tone>();
+  public List<Note> getRange() {
+    List<Note> result = new ArrayList<Note>();
     Note[] lowhigh = this.lowestHighest();
     Tone lowest = lowhigh[0].getTone();
     Tone highest = lowhigh[1].getTone();
     while (!lowest.equals(highest)) {
-      result.add(lowest);
+      result.add(new Note(lowest, 1, 1));
       lowest = this.nextTone(lowest);
     }
-    result.add(highest);
+    result.add(new Note(highest, 1, 1));
     return result;
   }
 
@@ -235,70 +231,6 @@ public final class MusicPiece implements MusicEditorModel {
       default:
         return null; // never gets here
     }
-  }
-
-  @Override
-  public String stringView() {
-    String ans = "";
-    if (this.beatsToNotes.isEmpty()) {
-      ans = "Add Notes to Start Editing Music!";
-    }
-    else {
-      List<Tone> toneRange = this.getRange();
-      Set<Integer> keys = this.beatsToNotes.keySet();
-      String[][] grid = new String[Collections.max(keys) + 2][toneRange.size() + 1];
-
-      // fills in first row and first column
-      int padLeft = Integer.toString(Collections.max(keys)).length();
-      String temp = "";
-      for (int k = 0; k < padLeft; k++) {
-        temp += " ";
-      }
-      grid[0][0] = temp; // five character space for top left
-      for (int i = 0; i < grid.length - 1; i++) {
-        grid[i + 1][0] = String.format("%" + Integer.toString(padLeft) + "s", Integer.toString(i));
-      }
-      for (int i = 0; i < toneRange.size(); i++) {
-        if (toneRange.get(i).toString().length() == 4) {
-          grid[0][i + 1] = String.format(" " + "%-4s", toneRange.get(i).toString());
-        }
-        else {
-          grid[0][i + 1] = String.format("%4s", toneRange.get(i).toString()) + " ";
-        }
-      }
-
-      // placeholders for all other rows and columns
-      for (int i = 1; i < grid.length; i++) {
-        for (int j = 1; j < grid[0].length; j++) {
-          grid[i][j] = "     "; // five character space
-        }
-      }
-
-      // replacing placeholders, if applicable
-      for (Integer i : keys) {
-        List<Note> notesPlaying = this.beatsToNotes.get(i);
-        for (Note pn : notesPlaying) {
-          String str;
-          if (pn.getDownbeat() == i) {
-            str = "  X  ";
-          } else {
-            str = "  |  ";
-          }
-          if (!grid[i + 1][pn.getTone().compareTo(toneRange.get(0)) + 1].equals("  X  ")) {
-            grid[i + 1][pn.getTone().compareTo(toneRange.get(0)) + 1] = str;
-          }
-        }
-      }
-
-      // building the representation from 2D array
-      for (String[] line : grid) {
-        for (String box : line) {
-          ans += box;
-        }
-        ans += "\n";
-      }
-    }
-    return ans;
   }
 
   @Override

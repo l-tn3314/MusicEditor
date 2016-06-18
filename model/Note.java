@@ -26,7 +26,7 @@ public class Note implements Comparable<Note> {
       throw new IllegalArgumentException("Can't have negative downbeat");
     }
     this.downbeat = downbeat;
-    if (duration < 1) {
+    if (duration < 0) {
       throw new IllegalArgumentException("Invalid Duration");
     }
     this.duration = duration;
