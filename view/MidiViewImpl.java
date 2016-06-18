@@ -35,22 +35,16 @@ public class MidiViewImpl implements MusicEditorView<Note> {
    * Constructs a MidiViewImpl
    */
   public MidiViewImpl() {
+    Synthesizer s = null;
+    Receiver r = null;
     Sequencer seq = null;
+    Transmitter t = null;
     try {
       seq = MidiSystem.getSequencer();
       seq.open();
     } catch (MidiUnavailableException e) {
       e.printStackTrace();
     }
-    this.sequencer = seq;
-  }
-
-  /**
-   * Constructs a MidiViewImpl for testing
-   *
-   * @param seq mock sequencer to be used
-   */
-  public MidiViewImpl(Sequencer seq) {
     this.sequencer = seq;
   }
 

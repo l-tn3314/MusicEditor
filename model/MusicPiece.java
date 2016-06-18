@@ -3,6 +3,7 @@ package cs3500.music.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -35,18 +36,29 @@ public final class MusicPiece implements MusicEditorModel<Note> {
     this.tempo = tempo;
   }
 
+  /**
+   * to add a note to this piece of music one note at a time
+   *
+   * @param note the note which to be added to this piece of music
+   * @throws IllegalArgumentException if the given note or its fields are null
+   */
   @Override
-  public void addNote(Note n) {
-    int noteBeat = n.getDownbeat();
-    int noteDur = n.getDuration();
+  public void addNote(Note note) throws IllegalArgumentException {
+    if (note == null || note.getTone() == null) {
+      throw new IllegalArgumentException("Note or fields are null");
+    }
+    else {
+    int noteBeat = note.getDownbeat();
+    int noteDur = note.getDuration();
     for (int i = 0; i < noteDur; i++) {
       if (this.beatsToNotes.containsKey(noteBeat + i)) {
-        this.beatsToNotes.get(noteBeat + i).add(n);
+        this.beatsToNotes.get(noteBeat + i).add(note);
       } else {
         List<Note> newList = new ArrayList<Note>();
-        newList.add(n);
+        newList.add(note);
         this.beatsToNotes.put(noteBeat + i, newList);
       }
+    }
     }
   }
 
@@ -61,7 +73,7 @@ public final class MusicPiece implements MusicEditorModel<Note> {
    * Removes keys that point to empty Lists in this piece's beatsToNotes
    */
   private void cleanEmptyKeys() {
-    Map<Integer, List<Note>> temp = new HashMap(this.beatsToNotes);
+    Map<Integer, List<Note>> temp = new HashMap<Integer, List<Note>>(this.beatsToNotes);
     Set<Integer> keys = temp.keySet();
     for (Integer i : keys) {
       if (this.beatsToNotes.get(i).isEmpty()) {
@@ -70,21 +82,33 @@ public final class MusicPiece implements MusicEditorModel<Note> {
     }
   }
 
+  /**
+   * Removes the given Note from this music editor model. Users may not remove
+   *                                  part of the duration of a note.
+   *
+   * @param note to be removed
+   * @return true if given note is successfully removed, false if not present
+   * @throws IllegalArgumentException if the note or its fields are null.
+   */
   @Override
-  public boolean removeNote(Note n) {
-    int noteBeat = n.getDownbeat();
-    boolean temp;
-    if (this.beatsToNotes.containsKey(noteBeat)) {
-      int noteDur = n.getDuration();
-      for (int i = 0; i < noteDur; i++) {
-        this.beatsToNotes.get(noteBeat + i).remove(n);
-      }
-      temp = true;
+  public boolean removeNote(Note note) throws IllegalArgumentException {
+    if (note == null || note.getTone() == null) {
+      throw new IllegalArgumentException("Note or fields are null");
     } else {
-      temp = false;
+      int noteBeat = note.getDownbeat();
+      boolean temp;
+      if (this.beatsToNotes.containsKey(noteBeat)) {
+        int noteDur = note.getDuration();
+        for (int i = 0; i < noteDur; i++) {
+          this.beatsToNotes.get(noteBeat + i).remove(note);
+        }
+        temp = true;
+      } else {
+        temp = false;
+      }
+      cleanEmptyKeys();
+      return temp;
     }
-    cleanEmptyKeys();
-    return temp;
   }
 
   @Override
@@ -109,42 +133,67 @@ public final class MusicPiece implements MusicEditorModel<Note> {
 
   @Override
   public Map<Integer, List<Note>> allNotes() {
-    return new HashMap(this.beatsToNotes);
+    return new HashMap<Integer, List<Note>>(this.beatsToNotes);
   }
-
+  /**
+   * To take this piece of music and the given piece of music, other, and create a new music editor
+   * that has the notes of both this and the given and plays them simultaneously.
+   *
+   * @param model the piece of music that a user might wish to combine with this.
+   * @return a new MusicEditorModel<Note></Note> that plays this MusicPiece and the
+   * given at the same time
+   */
   @Override
-  public MusicEditorModel combineSimultaneous(MusicEditorModel m) {
-    MusicEditorModel result = new MusicPiece();
+  public MusicEditorModel<Note> combineSimultaneous(MusicEditorModel<Note> model) {
+    MusicEditorModel<Note> result = new MusicPiece();
+    List<Note> notes = new ArrayList<Note>();
     for (Integer i : this.beatsToNotes.keySet()) {
-      List<Note> notes = this.beatsToNotes.get(i);
-      result.addNotes(notes.toArray(new Note[notes.size()]));
+      notes.addAll(this.beatsToNotes.get(i));
     }
-    Map<Integer, List<Note>> noteMap = m.allNotes();
+    notes = new ArrayList<Note>(new HashSet<Note>(notes));
+    result.addNotes(notes.toArray(new Note[notes.size()]));
+
+    notes = new ArrayList<Note>();
+    Map<Integer, List<Note>> noteMap = model.allNotes();
     Set<Integer> keys = noteMap.keySet();
     for (Integer k : keys) {
-      List<Note> givenNotes = noteMap.get(k);
-      result.addNotes(givenNotes.toArray(new Note[givenNotes.size()]));
+      notes.addAll(noteMap.get(k));
     }
+    notes = new ArrayList<Note>(new HashSet<Note>(notes));
+    result.addNotes(notes.toArray(new Note[notes.size()]));
     return result;
   }
 
+  /**
+   * To create a new GenericMusicEditor that takes the given piece of music and this piece of music
+   * and plays the other after this one.
+   *
+   * @param model piece of music the user wishes to play after this one
+   * @return a new MusicEditorModel<Note></Note> that takes the given piece of music and
+   * this one and plays them one after the other.
+   */
   @Override
-  public MusicEditorModel combineConsecutive(MusicEditorModel model) {
-    MusicEditorModel result = new MusicPiece();
+  public MusicEditorModel<Note> combineConsecutive(MusicEditorModel<Note> model) {
+    MusicEditorModel<Note> result = new MusicPiece();
+    List<Note> notes = new ArrayList<Note>();
     for (Integer i : this.beatsToNotes.keySet()) {
-      List<Note> notes = this.beatsToNotes.get(i);
-      result.addNotes(notes.toArray(new Note[notes.size()]));
+      notes.addAll(this.beatsToNotes.get(i));
     }
+    notes = new ArrayList<Note>(new HashSet<Note>(notes));
+    result.addNotes(notes.toArray(new Note[notes.size()]));
+
+    List<Note> listCopy = new ArrayList<Note>();
     Map<Integer, List<Note>> noteMap = model.allNotes();
     Set<Integer> keys = noteMap.keySet();
     int maxKey = Collections.max(this.beatsToNotes.keySet());
     for (Integer i : keys) {
-      List<Note> listCopy = new ArrayList<Note>();
       for (Note pn : noteMap.get(i)) {
         listCopy.add(new Note(pn.getTone(), pn.getDuration(), pn.getDownbeat() + maxKey + 1));
       }
-      result.addNotes(listCopy.toArray(new Note[listCopy.size()]));
     }
+    listCopy = new ArrayList<Note>(new HashSet<Note>(listCopy));
+    result.addNotes(listCopy.toArray(new Note[listCopy.size()]));
+
     return result;
   }
 
@@ -232,6 +281,8 @@ public final class MusicPiece implements MusicEditorModel<Note> {
     return this.tempo;
   }
 
+
+
   /**
    * Returns a Builder for MusicPiece
    *
@@ -257,8 +308,8 @@ public final class MusicPiece implements MusicEditorModel<Note> {
     }
 
     @Override
-    public MusicEditorModel build() {
-      MusicEditorModel m = new MusicPiece(tempo);
+    public MusicEditorModel<Note> build() {
+      MusicEditorModel<Note> m = new MusicPiece(tempo);
       for (Note n : notes) {
         m.addNote(n);
       }
