@@ -31,6 +31,10 @@ import cs3500.music.model.Tone;
 public class MidiViewImpl implements MusicEditorView<Note> {
   private final Sequencer sequencer;
 
+  public Sequencer getSequencer() {
+    return this.sequencer;
+  }
+
   /**
    * Constructs a MidiViewImpl
    */
@@ -50,46 +54,21 @@ public class MidiViewImpl implements MusicEditorView<Note> {
   /**
    * Constructors a MidiViewImpl for testing
    *
-   * @param seq mock sequencer to be used
+   * @param sequencer mock sequencer to be used
    */
-  public MidiViewImpl(Sequencer seq) {
-    this.sequencer = seq;
-  }
-
-  /**
-   * Relevant classes and methods from the javax.sound.midi library: <ul> <li>{@link
-   * MidiSystem#getSynthesizer()}</li> <li>{@link Synthesizer} <ul> <li>{@link
-   * Synthesizer#open()}</li> <li>{@link Synthesizer#getReceiver()}</li> <li>{@link
-   * Synthesizer#getChannels()}</li> </ul> </li> <li>{@link Receiver} <ul> <li>{@link
-   * Receiver#send(MidiMessage, long)}</li> <li>{@link Receiver#close()}</li> </ul> </li> <li>{@link
-   * MidiMessage}</li> <li>{@link ShortMessage}</li> <li>{@link MidiChannel} <ul> <li>{@link
-   * MidiChannel#getProgram()}</li> <li>{@link MidiChannel#programChange(int)}</li> </ul> </li>
-   * </ul>
-   *
-   * @see <a href="https://en.wikipedia.org/wiki/General_MIDI"> https://en.wikipedia.org/wiki/General_MIDI
-   * </a>
-   */
-  public void playNote() throws InvalidMidiDataException, InterruptedException {
-    MidiMessage start = new ShortMessage(ShortMessage.NOTE_ON, 0, 60, 64);
-    MidiMessage stop = new ShortMessage(ShortMessage.NOTE_OFF, 0, 60, 64);
-//    this.receiver.send(start, -1); // timestamp of -1 means responding asap
-//    this.receiver.send(stop, this.synth.getMicrosecondPosition() + 200000);
-//    Thread.sleep(2000);
-//    // java util timer or java swing timer to play notes at beats
-//    // tempo is how many microseconds per beats
-//    this.receiver.close(); // Only call this once you're done playing *all* notes
+  public MidiViewImpl(Sequencer sequencer) {
+    try {
+      Synthesizer syn = MidiSystem.getSynthesizer();
+      syn.loadAllInstruments(syn.getDefaultSoundbank());
+      sequencer.open();
+    } catch (MidiUnavailableException e) {
+      e.printStackTrace();
     }
+    this.sequencer = sequencer;
+  }
 
   @Override
-  public void initialize() {
-    try {
-      this.playNote();
-    } catch (InvalidMidiDataException e) {
-      e.printStackTrace();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
-  }
+  public void initialize() {}
 
   /**
    * Converts the given tone to a midi pitch
@@ -136,7 +115,6 @@ public class MidiViewImpl implements MusicEditorView<Note> {
                 toMidiPitch(n.getTone()), n.getVolume());
         MidiMessage stop = new ShortMessage(ShortMessage.NOTE_OFF, 0,
                 toMidiPitch(n.getTone()), n.getVolume());
-
         MidiEvent st = new MidiEvent(start, n.getDownbeat() * ticksPerBeat);
         MidiEvent sp = new MidiEvent(stop, (n.getDownbeat() + n.getDuration()) * ticksPerBeat);
 

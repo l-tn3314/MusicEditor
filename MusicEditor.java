@@ -24,7 +24,8 @@ public class MusicEditor {
     MusicEditorModel m = new MusicPiece();
     try {
       // INSERT PATH BELOW
-      m = MusicReader.parseFile(new FileReader("/Users/vugranamsreedhar/Documents/MusicEditorFinal/src/cs3500/music/util/" + args[0]), em);
+      //m = MusicReader.parseFile(new FileReader("C:\\Users\\Tina\\Documents\\college\\su16\\ood\\intellij\\src\\cs3500\\music\\util\\mystery-1.txt"), em);
+      m = MusicReader.parseFile(new FileReader("C:\\Users\\Tina\\Documents\\college\\su16\\ood\\intellij\\src\\cs3500\\music\\util\\" + args[0]), em);
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
