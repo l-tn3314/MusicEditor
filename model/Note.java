@@ -17,8 +17,8 @@ public class Note implements Comparable<Note> {
   private Tone tone; // column where placed
   private int downbeat; // the starting beat(starts from 0)
   private int duration; // how long each note is played
-  private int instrument;
-  private int volume;
+  private int instrument; // the number of instrument in midi
+  private int volume; // how loud the note is
 
   /**
    * Constructs a Note
@@ -155,11 +155,23 @@ public class Note implements Comparable<Note> {
     downbeat = newBeat;
   }
 
+  /**
+   * Overrides compareTo to compare two notes
+   *
+   * @param t the note that is being compared to this
+   * @return a 0 if the two notes are equal, a -1 one if this tone comes before the given one, and a
+   * 1 if this tone comes after this one.
+   */
   @Override
   public int compareTo(Note t) {
     return this.tone.compareTo(t.tone);
   }
 
+  /**
+   * Overrides toString to return a note's tone
+   *
+   * @return A String represnting this note
+   */
   @Override
   public String toString() {
     return this.tone.toString();

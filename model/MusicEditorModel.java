@@ -1,14 +1,13 @@
 package cs3500.music.model;
 
 /**
- * /**
- * This is an editor for a general music editor and all of the functionality that can be applied to
- * a piece of music. An implementation of this interface will allow the user to add a song to the
+ * /** This is an editor for a general music editor and all of the functionality that can be applied
+ * to a piece of music. An implementation of this interface will allow the user to add a song to the
  * editor, add music one note at a time, remove a note, combine two pieces of music to play
  * simultaneous, play two pieces of music consecutively, and access the notes from a piece of
  * music.
  *
- * @param <N> type of Note
+ * @param <N> type of Note which to be used in this Editor
  */
 public interface MusicEditorModel<N> extends ReadOnlyModel<N> {
 
@@ -28,8 +27,8 @@ public interface MusicEditorModel<N> extends ReadOnlyModel<N> {
   void addNotes(N... notes);
 
   /**
-   * Removes the given Note from this music editor model. Users may not remove
-   *                                  part of the duration of a note.
+   * Removes the given Note from this music editor model. Users may not remove part of the duration
+   * of a note.
    *
    * @param note to be removed
    * @return true if given note is successfully removed, false if not present

@@ -15,17 +15,17 @@ import cs3500.music.util.ViewCreator;
 import cs3500.music.view.MusicEditorView;
 
 /**
- * Music editor
+ * The main method that runs the main Music Editor. It takes in two arguments where the first is the
+ * filename and the second is the type of view that the user would like to display
  */
 public class MusicEditor {
 
   public static void main(String[] args) throws IOException, InvalidMidiDataException {
     CompositionBuilder<MusicEditorModel> em = new MusicPiece.Builder();
-    MusicEditorModel m = new MusicPiece();
+    MusicEditorModel<Note> m = new MusicPiece();
     try {
       // INSERT PATH BELOW
-      //m = MusicReader.parseFile(new FileReader("C:\\Users\\Tina\\Documents\\college\\su16\\ood\\intellij\\src\\cs3500\\music\\util\\mystery-1.txt"), em);
-      m = MusicReader.parseFile(new FileReader("C:\\Users\\Tina\\Documents\\college\\su16\\ood\\intellij\\src\\cs3500\\music\\util\\" + args[0]), em);
+      m = MusicReader.parseFile(new FileReader(System.getProperty("user.dir") + "/" + args[0]), em);
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }

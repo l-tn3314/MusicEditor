@@ -16,7 +16,7 @@ public class PitchTest {
 
   @Test
   public void testToStringCSharp() {
-    assertEquals("C#", Pitch.CSharp.toString());
+    assertEquals("C#", Pitch.CSHARP.toString());
   }
 
   @Test
@@ -26,7 +26,7 @@ public class PitchTest {
 
   @Test
   public void testToStringDSharp() {
-    assertEquals("D#", Pitch.DSharp.toString());
+    assertEquals("D#", Pitch.DSHARP.toString());
   }
 
   @Test
@@ -41,7 +41,7 @@ public class PitchTest {
 
   @Test
   public void testToStringFSharp() {
-    assertEquals("F#", Pitch.FSharp.toString());
+    assertEquals("F#", Pitch.FSHARP.toString());
   }
 
   @Test
@@ -51,7 +51,7 @@ public class PitchTest {
 
   @Test
   public void testToStringGSharp() {
-    assertEquals("G#", Pitch.GSharp.toString());
+    assertEquals("G#", Pitch.GSHARP.toString());
   }
 
   @Test
@@ -61,7 +61,7 @@ public class PitchTest {
 
   @Test
   public void testToStringASharp() {
-    assertEquals("A#", Pitch.ASharp.toString());
+    assertEquals("A#", Pitch.ASHARP.toString());
   }
 
   @Test

@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Read-only music editor model
+ * Read-only music editor model that only offers limited functionality like accessing copy of the
+ * notes in a composition, the notes in a given beat, the range of notes in the composition and the
+ * tempo. This model is used in our view to keep both components separate.
  *
  * @param <N> type of Note
  */
@@ -30,7 +32,8 @@ public interface ReadOnlyModel<N> {
   /**
    * Returns the range of Notes of this composition
    *
-   * @return List of Note that represent the range of (tones for) this composition
+   * @return List of Note that represent the range of (tones for) this composition. If this
+   * composition is empty, returns an empty list of notes.
    */
   List<N> getRange();
 

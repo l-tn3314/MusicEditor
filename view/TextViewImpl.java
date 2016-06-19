@@ -1,35 +1,54 @@
 package cs3500.music.view;
 
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import cs3500.music.model.MusicEditorModel;
-import cs3500.music.model.MusicPiece;
 import cs3500.music.model.Note;
-import cs3500.music.model.Octave;
-import cs3500.music.model.Pitch;
 import cs3500.music.model.ReadOnlyModel;
-import cs3500.music.model.Tone;
 
 /**
- * Text view implementation
+ * Text view implementation that renders the notes in this composition in the console with their
+ * range of tones and beat numbers
  */
 public class TextViewImpl implements MusicEditorView<Note> {
 
+  private Appendable out; // to be appended to for console rendering
+
+  // to construct a text view of a composition
+  public TextViewImpl() {
+    this.out = System.out;
+  }
+
+  // convenience constructor for testing
+  public TextViewImpl(Appendable out) {
+    this.out = out;
+  }
+
+  /**
+   * Method not supported in this implementation
+   */
   @Override
   public void initialize() {
   }
 
 
+  /**
+   * Creates a String representation of this model. Columns are five characters. The leftmost column
+   * represents the beats, right-justified. The top row represents each pitch. Each note head is " X
+   * " and each note-sustain is "  |  ".
+   *
+   * @param m model whose Notes is to be displayed
+   * @return String representation of this model
+   */
   @Override
   public void display(ReadOnlyModel<Note> m) {
     String ans = "";
     if (m.allNotes().isEmpty()) {
       ans = "Add Notes to Start Editing Music!";
-    }
-    else {
+    } else {
       List<Note> noteRange = m.getRange();
       Set<Integer> keys = m.allNotes().keySet();
       String[][] grid = new String[Collections.max(keys) + 2][noteRange.size() + 1];
@@ -47,8 +66,7 @@ public class TextViewImpl implements MusicEditorView<Note> {
       for (int i = 0; i < noteRange.size(); i++) {
         if (noteRange.get(i).toString().length() == 4) {
           grid[0][i + 1] = String.format(" " + "%-4s", noteRange.get(i).toString());
-        }
-        else {
+        } else {
           grid[0][i + 1] = String.format("%4s", noteRange.get(i).toString()) + " ";
         }
       }
@@ -84,52 +102,10 @@ public class TextViewImpl implements MusicEditorView<Note> {
         ans += "\n";
       }
     }
-    System.out.println(ans);
-  }
-
-
-  public static void main(String[] args) {
-    MusicEditorView t = new TextViewImpl();
-    MusicEditorModel piece;
-    Note e4BeatOne;
-    Note d4BeatThree;
-    Note c4BeatFive;
-    Note d4BeatSeven;
-    Note e4BeatNine;
-    Note e4BeatEleven;
-    Note e4BeatThirteen;
-
-    Note g3BeatOne;
-    Note g3BeatNine;
-
-    Tone e4 = new Tone
-            (Pitch.E, Octave.FOUR);
-    Tone d4 = new Tone
-            (Pitch.D, Octave.FOUR);
-    Tone g3 = new Tone
-            (Pitch.G, Octave.THREE);
-
-      piece = new MusicPiece();
-      e4BeatOne = new Note(e4, 2, 1);
-      d4BeatThree = new Note(d4, 2, 3);
-      c4BeatFive = new Note(new Tone
-              (Pitch.C, Octave.FOUR), 2, 5);
-      d4BeatSeven = new Note(d4, 2, 7);
-      e4BeatNine = new Note(e4, 2, 9);
-      e4BeatEleven = new Note(e4, 2, 11);
-      e4BeatThirteen = new Note(e4, 2, 13);
-      g3BeatOne = new Note(g3, 7, 1);
-      g3BeatNine = new Note(g3, 7, 9);
-    piece.addNote(e4BeatOne);
-    piece.addNote(d4BeatThree);
-    piece.addNote(c4BeatFive);
-    piece.addNote(d4BeatSeven);
-    piece.addNote(e4BeatNine);
-    piece.addNote(e4BeatEleven);
-    piece.addNote(e4BeatThirteen);
-    piece.addNote(g3BeatOne);
-    piece.addNote(g3BeatNine);
-
-    t.display(piece);
+    try {
+      out.append(ans);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }

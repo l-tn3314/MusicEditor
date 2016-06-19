@@ -9,15 +9,23 @@ import javax.sound.midi.Receiver;
 import javax.sound.midi.Sequencer;
 import javax.sound.midi.Transmitter;
 
-import cs3500.music.view.MockReceiver;
-
-
+/**
+ * Emulates a midi device for testing purposes. Only get receiver, get transmitter and, get
+ * sequencers are overridden to emulate the messages being sent to a receiver. All other methods in
+ * a standard MidiDevice are not supported.
+ */
 public class MockMidi implements MidiDevice {
   private StringBuilder stringBuilder;
   private Sequencer sequencer;
   private Transmitter transmitter;
   private Receiver mockReceiver;
 
+  /**
+   * to construct a MockMidi where the mock receiver is set to be the receiver
+   *
+   * @param stringBuilder the string builder passed to the MockReceiver to check if it has received
+   *                      all of the messages sent to it.
+   */
   public MockMidi(StringBuilder stringBuilder) {
     this.stringBuilder = stringBuilder;
     Sequencer seq = null;
@@ -33,45 +41,51 @@ public class MockMidi implements MidiDevice {
     this.sequencer = seq;
   }
 
+  /**
+   * @return this sequencer
+   */
   public Sequencer getSequencer() {
     return sequencer;
   }
 
   @Override
   public Info getDeviceInfo() {
-    return null;
+    throw new IllegalArgumentException("This method is not supported by MockMidi");
   }
 
   @Override
   public void open() throws MidiUnavailableException {
-
+    throw new IllegalArgumentException("This method is not supported by MockMidi");
   }
 
   @Override
   public void close() {
-
+    throw new IllegalArgumentException("This method is not supported by MockMidi");
   }
 
   @Override
   public boolean isOpen() {
-    return false;
+    throw new IllegalArgumentException("This method is not supported by MockMidi");
   }
 
   @Override
   public long getMicrosecondPosition() {
-    return 0;
+    throw new IllegalArgumentException("This method is not supported by MockMidi");
   }
 
   @Override
   public int getMaxReceivers() {
-    return 0;
+    throw new IllegalArgumentException("This method is not supported by MockMidi");
   }
 
   @Override
   public int getMaxTransmitters() {
-    return 0;
+    throw new IllegalArgumentException("This method is not supported by MockMidi");
   }
 
+  /**
+   * @return an object of the mockReceiver class
+   */
   @Override
   public Receiver getReceiver() throws MidiUnavailableException {
     return mockReceiver;
@@ -79,9 +93,12 @@ public class MockMidi implements MidiDevice {
 
   @Override
   public List<Receiver> getReceivers() {
-    return null;
+    throw new IllegalArgumentException("This method is not supported by MockMidi");
   }
 
+  /**
+   * @return this transmitter
+   */
   @Override
   public Transmitter getTransmitter() throws MidiUnavailableException {
     return transmitter;
@@ -89,6 +106,6 @@ public class MockMidi implements MidiDevice {
 
   @Override
   public List<Transmitter> getTransmitters() {
-    return null;
+    throw new IllegalArgumentException("This method is not supported by MockMidi");
   }
 }

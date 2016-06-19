@@ -8,7 +8,6 @@ import java.util.Map;
 
 import javax.swing.*;
 
-import cs3500.music.model.MusicEditorModel;
 import cs3500.music.model.Note;
 import cs3500.music.model.ReadOnlyModel;
 
@@ -17,10 +16,10 @@ import static cs3500.music.view.GuiViewFrame.SCALE;
 /**
  * JPanel that displays the notes stored in a model
  */
-public class ConcreteGuiViewPanel extends JPanel {
-  private ReadOnlyModel<Note> model;
-  int width;
-  int height;
+class ConcreteGuiViewPanel extends JPanel {
+  private ReadOnlyModel<Note> model; // read only model where the gui gets the information from
+  private int width; // the width of the panel
+  private int height; // the height of the panel
 
   /**
    * Constructs a ConcreteGuiViewPanel with the given width and height
@@ -45,6 +44,14 @@ public class ConcreteGuiViewPanel extends JPanel {
     this.repaint();
   }
 
+  /**
+   * Renders a composition of music. Downbeats are rendered in black and their durations if they are
+   * greater than one are rendered in cyan. Measure lines are drawn every four beats and a thick bar
+   * line is drawn to separate between octaves. Beats are also rendered and the top and pitches
+   * rendered to the left.
+   *
+   * @param g the graphics that are to be painted
+   */
   @Override
   public void paintComponent(Graphics g) {
     // Handle the default painting
@@ -89,7 +96,8 @@ public class ConcreteGuiViewPanel extends JPanel {
       Graphics2D g2D = (Graphics2D) g;
       g2D.setStroke(new BasicStroke(2));
       for (int j = 0; j <= lastBeat + 1; j += 4) {
-        g.drawString(Integer.toString(j), ((j + 2) * SCALE) - (2 * Integer.toString(j).length()), (3 * SCALE) / 4);
+        g.drawString(Integer.toString(j), ((j + 2) * SCALE) -
+                (2 * Integer.toString(j).length()), (3 * SCALE) / 4);
         g2D.drawLine((j + 2) * SCALE, SCALE,
                 (j + 2) * SCALE, (noteRange.size() + 1) * SCALE);
       }

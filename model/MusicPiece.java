@@ -12,7 +12,16 @@ import java.util.Set;
 import cs3500.music.util.CompositionBuilder;
 
 /**
- * Represents a piece of music
+ * /** To represent a piece of music in a Music Editor that has the ability to be edited and altered
+ * in various ways. The music editor represents all music based off of western music. The notes are
+ * based off of the western music rules where there are 12 distinct pitches in one octave. This
+ * model also only represents music that can be heard by humans therefore only 10 octaves are
+ * supported. The tempo of this music is represented only in beats. Meausres are not considered in
+ * this Model. The functionality of this model implements that of the GenericMusicEditor therefore
+ * users have the ability to add notes to this editor, delete notes, combine two pieces of music to
+ * be played either cosecutively or simultaneously. Some class invariants include putting in no
+ * notes into the editor in which it would return the default value and putting in a note into the
+ * method removeNote() that is not in the Music Model.
  */
 public final class MusicPiece implements MusicEditorModel<Note> {
   private int tempo; // tempo in microseconds per beat
@@ -27,9 +36,9 @@ public final class MusicPiece implements MusicEditorModel<Note> {
   }
 
   /**
-   * Constructs a MusicPiece with the given bpm
+   * Constructs a MusicPiece with the given beats per measure
    *
-   * @param tempo            in microseconds
+   * @param tempo in microseconds
    */
   public MusicPiece(int tempo) {
     this();
@@ -46,22 +55,26 @@ public final class MusicPiece implements MusicEditorModel<Note> {
   public void addNote(Note note) throws IllegalArgumentException {
     if (note == null || note.getTone() == null) {
       throw new IllegalArgumentException("Note or fields are null");
-    }
-    else {
-    int noteBeat = note.getDownbeat();
-    int noteDur = note.getDuration();
-    for (int i = 0; i < noteDur; i++) {
-      if (this.beatsToNotes.containsKey(noteBeat + i)) {
-        this.beatsToNotes.get(noteBeat + i).add(note);
-      } else {
-        List<Note> newList = new ArrayList<Note>();
-        newList.add(note);
-        this.beatsToNotes.put(noteBeat + i, newList);
+    } else {
+      int noteBeat = note.getDownbeat();
+      int noteDur = note.getDuration();
+      for (int i = 0; i < noteDur; i++) {
+        if (this.beatsToNotes.containsKey(noteBeat + i)) {
+          this.beatsToNotes.get(noteBeat + i).add(note);
+        } else {
+          List<Note> newList = new ArrayList<Note>();
+          newList.add(note);
+          this.beatsToNotes.put(noteBeat + i, newList);
+        }
       }
-    }
     }
   }
 
+  /**
+   * Adds the given Notes to this music editor model
+   *
+   * @param notes to be added to the music editor
+   */
   @Override
   public void addNotes(Note... notes) {
     for (Note n : notes) {
@@ -83,8 +96,8 @@ public final class MusicPiece implements MusicEditorModel<Note> {
   }
 
   /**
-   * Removes the given Note from this music editor model. Users may not remove
-   *                                  part of the duration of a note.
+   * Removes the given Note from this music editor model. Users may not remove part of the duration
+   * of a note.
    *
    * @param note to be removed
    * @return true if given note is successfully removed, false if not present
@@ -111,6 +124,14 @@ public final class MusicPiece implements MusicEditorModel<Note> {
     }
   }
 
+  /**
+   * Removes all Notes that play on the given beat from this music editor model
+   *
+   * @param beat to be checked against
+   * @return true if notes are successfully removed, false if no notes present
+   * @throws IllegalArgumentException if given beat is less than one
+   */
+
   @Override
   public boolean removeAllNotesAt(int beat) throws IllegalArgumentException {
     if (beat < 0) {
@@ -119,6 +140,13 @@ public final class MusicPiece implements MusicEditorModel<Note> {
     return this.beatsToNotes.remove(beat) != null;
   }
 
+  /**
+   * Returns a List of all Notes on the given beat
+   *
+   * @param beat beat to be checked against
+   * @return List of all Notes on the given beat
+   * @throws IllegalArgumentException if given beat is less than one
+   */
   @Override
   public List<Note> notesAt(int beat) throws IllegalArgumentException {
     if (beat < 0) {
@@ -131,17 +159,24 @@ public final class MusicPiece implements MusicEditorModel<Note> {
     }
   }
 
+  /**
+   * Returns a Map of all Notes in the music editor model, where Integer represents the beat and
+   * List represents the Notes that are played on that beat
+   *
+   * @return List of all Notes in the music editor
+   */
   @Override
   public Map<Integer, List<Note>> allNotes() {
     return new HashMap<Integer, List<Note>>(this.beatsToNotes);
   }
+
   /**
    * To take this piece of music and the given piece of music, other, and create a new music editor
    * that has the notes of both this and the given and plays them simultaneously.
    *
    * @param model the piece of music that a user might wish to combine with this.
-   * @return a new MusicEditorModel<Note></Note> that plays this MusicPiece and the
-   * given at the same time
+   * @return a new MusicEditorModel<Note></Note> that plays this MusicPiece and the given at the
+   * same time
    */
   @Override
   public MusicEditorModel<Note> combineSimultaneous(MusicEditorModel<Note> model) {
@@ -169,8 +204,8 @@ public final class MusicPiece implements MusicEditorModel<Note> {
    * and plays the other after this one.
    *
    * @param model piece of music the user wishes to play after this one
-   * @return a new MusicEditorModel<Note></Note> that takes the given piece of music and
-   * this one and plays them one after the other.
+   * @return a new MusicEditorModel<Note></Note> that takes the given piece of music and this one
+   * and plays them one after the other.
    */
   @Override
   public MusicEditorModel<Note> combineConsecutive(MusicEditorModel<Note> model) {
@@ -231,7 +266,7 @@ public final class MusicPiece implements MusicEditorModel<Note> {
    * @return Note that comes after this Note chromatically
    */
   private Tone nextTone(Tone t) {
-    switch(t.getPitch()) {
+    switch (t.getPitch()) {
       case C:
         return new Tone(Pitch.CSHARP, t.getOctave());
       case CSHARP:
@@ -262,9 +297,18 @@ public final class MusicPiece implements MusicEditorModel<Note> {
     }
   }
 
+  /**
+   * Returns the range of Notes of this composition
+   *
+   * @return List of Note that represent the range of (tones for) this composition. If this
+   * composition is empty, returns an empty list of notes.
+   */
   @Override
   public List<Note> getRange() {
     List<Note> result = new ArrayList<Note>();
+    if (beatsToNotes.size() == 0) {
+      return result;
+    }
     Note[] lowhigh = this.lowestHighest();
     Tone lowest = lowhigh[0].getTone();
     Tone highest = lowhigh[1].getTone();
@@ -276,15 +320,19 @@ public final class MusicPiece implements MusicEditorModel<Note> {
     return result;
   }
 
+  /**
+   * Returns the tempo(in microseconds) of this model
+   *
+   * @return tempo(in microseconds) of this model
+   */
   @Override
   public int getTempo() {
     return this.tempo;
   }
 
-
-
   /**
-   * Returns a Builder for MusicPiece
+   * Returns a Builder for a MusicPiece that allows different parameters to be added to a note
+   * object.
    *
    * @return Builder for MusicPiece
    */
@@ -307,6 +355,11 @@ public final class MusicPiece implements MusicEditorModel<Note> {
       notes = new LinkedList<Note>();
     }
 
+    /**
+     * Builds a new piece of composition
+     *
+     * @return a new composition model for the the type note
+     */
     @Override
     public MusicEditorModel<Note> build() {
       MusicEditorModel<Note> m = new MusicPiece(tempo);
@@ -316,6 +369,12 @@ public final class MusicPiece implements MusicEditorModel<Note> {
       return m;
     }
 
+    /**
+     * updates the tempo to the given
+     *
+     * @param tempo The speed, in microseconds per beat
+     * @return a new compositionBuilder with an updated tempo
+     */
     @Override
     public CompositionBuilder<MusicEditorModel> setTempo(int tempo) {
       this.tempo = tempo;
@@ -334,8 +393,20 @@ public final class MusicPiece implements MusicEditorModel<Note> {
       return new Tone(pits[pitch % 12], octs[((pitch - 24) / 12)]);
     }
 
+    /**
+     * Adds a note from the given midi text files to this piece of composition
+     *
+     * @param start      The start time of the note, in beats
+     * @param end        The end time of the note, in beats
+     * @param instrument The instrument number (to be interpreted by MIDI)
+     * @param pitch      The pitch (in the range [0, 127], where 60 represents C4, the middle-C on a
+     *                   piano)
+     * @param volume     The volume (in the range [0, 127])
+     * @return a new CompositionBuilder with a new note added to it with the given parameters
+     */
     @Override
-    public CompositionBuilder<MusicEditorModel> addNote(int start, int end, int instrument, int pitch, int volume) {
+    public CompositionBuilder<MusicEditorModel> addNote(int start, int end, int instrument,
+                                                        int pitch, int volume) {
       notes.add(new Note(toTone(pitch), end - start, start, instrument, volume));
       return this;
     }

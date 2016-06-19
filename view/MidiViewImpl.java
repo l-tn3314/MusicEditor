@@ -5,20 +5,16 @@ import java.util.List;
 import java.util.Map;
 
 import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiChannel;
 import javax.sound.midi.MidiEvent;
 import javax.sound.midi.MidiMessage;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
-import javax.sound.midi.Receiver;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Synthesizer;
 import javax.sound.midi.Track;
-import javax.sound.midi.Transmitter;
 
-import cs3500.music.model.MusicEditorModel;
 import cs3500.music.model.Note;
 import cs3500.music.model.Octave;
 import cs3500.music.model.Pitch;
@@ -26,7 +22,10 @@ import cs3500.music.model.ReadOnlyModel;
 import cs3500.music.model.Tone;
 
 /**
- * Midi view implementation
+ * Midi View implementation that plays back all of the notes in a composition.
+ * Musical Instrument Digital Interface (MIDI) is supported by Java's standard library.
+ * A sequencer which extends a MidiDevice is used to play back a Midi sequence that contains
+ * lists of time-stamped MIDI data.
  */
 public class MidiViewImpl implements MusicEditorView<Note> {
   private final Sequencer sequencer;
@@ -68,7 +67,8 @@ public class MidiViewImpl implements MusicEditorView<Note> {
   }
 
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   /**
    * Converts the given tone to a midi pitch
@@ -82,6 +82,11 @@ public class MidiViewImpl implements MusicEditorView<Note> {
     return t.getPitch().ordinal() + (t.getOctave().ordinal() * 12) + 24;
   }
 
+  /**
+   * To play the notes in this model
+   *
+   * @param m model whose Notes is to be displayed
+   */
   @Override
   public void display(ReadOnlyModel<Note> m) {
     sequencer.setTempoInMPQ(m.getTempo());
@@ -129,6 +134,10 @@ public class MidiViewImpl implements MusicEditorView<Note> {
       e.printStackTrace();
     }
     sequencer.start();
+
+    if (this.sequencer.getTickPosition() == this.sequencer.getTickLength()) {
+      this.sequencer.close();
+    }
   }
 
 }

@@ -1,10 +1,10 @@
 package cs3500.music.view;
 
-import cs3500.music.model.MusicEditorModel;
 import cs3500.music.model.ReadOnlyModel;
 
 /**
- * Music editor view
+ * A general type of view that can be created for a Music Editor. We have implemented a text view, a
+ * gui view, and a midi view.
  *
  * @param <N> type of Note
  */
