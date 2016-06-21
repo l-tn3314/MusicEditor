@@ -9,6 +9,7 @@ import java.util.Map;
 
 import cs3500.music.model.MusicEditorModel;
 import cs3500.music.model.Note;
+import cs3500.music.model.ReadOnlyModel;
 import cs3500.music.view.GuiView;
 
 public class Controller implements ActionListener {
@@ -27,30 +28,17 @@ public class Controller implements ActionListener {
     Map<Integer, Runnable> keyPresses = new HashMap<>();
     Map<Integer, Runnable> keyReleases = new HashMap<>();
 
-    keyPresses.put(KeyEvent.VK_RIGHT, new Runnable() {
+    keyPresses.put(KeyEvent.VK_HOME, new Runnable() {
       public void run() {
         //Runnable function for scrolling right
-        view.moveHorizontal(10);
+        view.moveHome();
       }
     });
 
-    keyPresses.put(KeyEvent.VK_LEFT, new Runnable() {
+    keyPresses.put(KeyEvent.VK_END, new Runnable() {
       public void run() {
         //Runnable function for scrolling right
-        view.moveHorizontal(-10);
-      }
-    });
-
-    keyPresses.put(KeyEvent.VK_UP, new Runnable() {
-      public void run() {
-        //Runnable function for scrolling right
-        view.moveVertical(-10);
-      }
-    });
-    keyPresses.put(KeyEvent.VK_DOWN, new Runnable() {
-      public void run() {
-        //Runnable function for scrolling right
-        view.moveVertical(10);
+        view.moveEnd();
       }
     });
 
@@ -60,6 +48,10 @@ public class Controller implements ActionListener {
     kbh.setKeyTypedMap(keyTypes);
 
     view.addKeyListener(kbh);
+  }
+
+  public void display() {
+    view.display(model);
   }
 
   @Override

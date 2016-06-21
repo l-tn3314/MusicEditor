@@ -28,7 +28,7 @@ public class GuiViewFrame extends javax.swing.JFrame implements GuiView {
     setSize(300, 300);
     this.displayPanel = new ConcreteGuiViewPanel(300, 300);
     this.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-    this.getContentPane().add(displayPanel);
+    //this.getContentPane().add(displayPanel);
     scrollPane = new JScrollPane(displayPanel,
             ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -36,6 +36,7 @@ public class GuiViewFrame extends javax.swing.JFrame implements GuiView {
     this.add(scrollPane);
     scrollPane.revalidate();
     this.pack();
+    scrollPane.setFocusable(true);
   }
 
   /**
@@ -67,32 +68,22 @@ public class GuiViewFrame extends javax.swing.JFrame implements GuiView {
   }
 
   @Override
-  public void moveHorizontal(int distance) {
-    Rectangle r = scrollPane.getVisibleRect();
-    if (!(distance < 0) && r.getX() > 0) {
-      r.translate(distance, 0);
-    } else if (!(distance > 0) && r.getX() < getWidth()) {
-      r.translate(0, distance);
-    } else {}
-    scrollPane.scrollRectToVisible(r);
-  }
-
-  @Override
   public void resetFocus() {
     this.setFocusable(true);
     this.requestFocus();
   }
 
   @Override
-  public void moveVertical(int distance) {
-    Rectangle r = scrollPane.getVisibleRect();
-    if (!(distance < 0) && r.getY() > 0) {
-      r.translate(distance, 0);
-    } else if (!(distance > 0) && r.getY() < getHeight()) {
-      r.translate(0, distance);
-    } else {}
-    scrollPane.scrollRectToVisible(r);
+  public void moveHome() {
+    Point p = scrollPane.getViewport().getViewPosition();
+    scrollPane.getViewport().setViewPosition(new Point(0, (int)p.getY()));
+  }
 
+  @Override
+  public void moveEnd() {
+    Point p = scrollPane.getViewport().getViewPosition();
+    int x = displayPanel.getWidth() - scrollPane.getViewport().getWidth();
+    scrollPane.getViewport().setViewPosition(new Point(x, (int)p.getY()));
   }
 
   @Override
@@ -102,5 +93,6 @@ public class GuiViewFrame extends javax.swing.JFrame implements GuiView {
 
   @Override
   public void addActionListener(ActionListener listener) {
+    //.addActionListener(listener);
   }
 }

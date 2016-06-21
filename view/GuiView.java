@@ -7,11 +7,11 @@ import cs3500.music.model.Note;
 
 public interface GuiView extends MusicEditorView<Note>{
 
-  void moveHorizontal(int distance);
-
   void resetFocus();
 
-  void moveVertical(int distance);
+  void moveHome();
+
+  void moveEnd();
 
   void addKeyListener(KeyListener listener);
 
