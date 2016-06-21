@@ -45,10 +45,10 @@ class ConcreteGuiViewPanel extends JPanel {
   }
 
   /**
-   * Renders a composition of music. Downbeats are rendered in black and their durations if they are
-   * greater than one are rendered in cyan. Measure lines are drawn every four beats and a thick bar
-   * line is drawn to separate between octaves. Beats are also rendered and the top and pitches
-   * rendered to the left.
+   * Renders a composition of music. Downbeats are rendered in black and their durations
+   * if they are greater than one are rendered in cyan. Measure lines are drawn every four beats
+   * and a thick bar line is drawn to separate between octaves. Beats are also rendered and the
+   * top and pitches rendered to the left.
    *
    * @param g the graphics that are to be painted
    */

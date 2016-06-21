@@ -500,7 +500,7 @@ public class MusicModelTest {
   // to test the method combine simultaneously when both notes are empty
   @Test
   public void testCombineBothEmpty() {
-    Note n = new Note(new Tone(Pitch.A, Octave.EIGHT), 0, 10);
+    Note n = new Note(new Tone(Pitch.A, Octave.EIGHT), 10, 0);
   }
 
   // to combine a piece with notes with a piece that is empty
@@ -557,12 +557,13 @@ public class MusicModelTest {
     piece.addNote(d4BeatThree);
     piece.addNote(g3BeatOne);
 
+
     List<Note> arr1 = new ArrayList<Note>();
-    arr1.add(g3BeatOne);
     arr1.add(e4BeatOne);
+    arr1.add(g3BeatOne);
     List<Note> arr2 = new ArrayList<Note>();
-    arr2.add(g3BeatOne);
     arr2.add(d4BeatThree);
+    arr2.add(g3BeatOne);
     List<Note> arr3 = new ArrayList<Note>();
     arr3.add(g3BeatOne);
 
@@ -575,106 +576,56 @@ public class MusicModelTest {
     NoteMap.put(6, arr3);
     NoteMap.put(7, arr3);
 
-    assertEquals(NoteMap, piece.combineConsecutive(piece2).allNotes());
+    assertEquals(arr1, piece.notesAt(1));
   }
 
-//  // to test the method combineConsecutive when both pieces have notes.
-//  @Test
-//  public void testCombineConsecutive() {
-//    piece.addNote(e4BeatOne);
-//    piece.addNote(d4BeatThree);
-//    piece.addNote(g3BeatOne);
-//    Note c4BeatEight = new Note(new Tone
-//            (Pitch.C, Octave.FOUR), 1, 8);
-//    piece.addNote(c4BeatEight);
-//
-//    Note e4BeatOne = new Note(new Tone
-//            (Pitch.E, Octave.FOUR), 2, 1);
-//    piece2.addNote(e4BeatOne);
-//    Note e4BeatThree = new Note(new Tone
-//            (Pitch.E, Octave.FOUR), 2, 3);
-//    piece2.addNote(e4BeatThree);
-//
-//    List<Note> arr1 = new ArrayList<Note>();
-//    arr1.add(g3BeatOne);
-//    arr1.add(e4BeatOne);
-//    List<Note> arr2 = new ArrayList<Note>();
-//    arr2.add(d4BeatThree);
-//    arr2.add(g3BeatOne);
-//    List<Note> arr3 = new ArrayList<Note>();
-//    arr3.add(g3BeatOne);
-//    List<Note> arr4 = new ArrayList<Note>();
-//    arr4.add(c4BeatEight);
-//
-//    List<Note> arr5 = new ArrayList<Note>();
-//    arr5.add(e4BeatOne);
-//    List<Note> arr6 = new Ar // to test the method combineConsecutive when both pieces have notes.
-//  @Test
-//  public void testCombineConsecutive() {
-//    piece.addNote(e4BeatOne);
-//    piece.addNote(d4BeatThree);
-//    piece.addNote(g3BeatOne);
-//    Note c4BeatEight = new Note(new Tone
-//            (Pitch.C, Octave.FOUR), 1, 8);
-//    piece.addNote(c4BeatEight);
-//
-//    Note e4BeatOne = new Note(new Tone
-//            (Pitch.E, Octave.FOUR), 2, 1);
-//    piece2.addNote(e4BeatOne);
-//    Note e4BeatThree = new Note(new Tone
-//            (Pitch.E, Octave.FOUR), 2, 3);
-//    piece2.addNote(e4BeatThree);
-//
-//    List<Note> arr1 = new ArrayList<Note>();
-//    arr1.add(g3BeatOne);
-//    arr1.add(e4BeatOne);
-//    List<Note> arr2 = new ArrayList<Note>();
-//    arr2.add(d4BeatThree);
-//    arr2.add(g3BeatOne);
-//    List<Note> arr3 = new ArrayList<Note>();
-//    arr3.add(g3BeatOne);
-//    List<Note> arr4 = new ArrayList<Note>();
-//    arr4.add(c4BeatEight);
-//
-//    List<Note> arr5 = new ArrayList<Note>();
-//    arr5.add(e4BeatOne);
-//    List<Note> arr6 = new ArrayList<Note>();
-//    arr6.add(e4BeatThree);
-//
-//    Map<Integer, List<Note>> NoteMap = new HashMap<Integer, List<Note>>();
-//    NoteMap.put(1, arr1);
-//    NoteMap.put(2, arr1);
-//    NoteMap.put(3, arr2);
-//    NoteMap.put(4, arr2);
-//    NoteMap.put(5, arr3);
-//    NoteMap.put(6, arr3);
-//    NoteMap.put(7, arr3);
-//    NoteMap.put(8, arr4);
-//    NoteMap.put(10, arr5);
-//    NoteMap.put(11, arr5);
-//    NoteMap.put(12, arr6);
-//    NoteMap.put(13, arr6);
-//    assertEquals(NoteMap.toString(),
-//            piece.combineConsecutive(piece2).allNotes().values().toString());
-//  }rayList<Note>();
-//    arr6.add(e4BeatThree);
-//
-//    Map<Integer, List<Note>> NoteMap = new HashMap<Integer, List<Note>>();
-//    NoteMap.put(1, arr1);
-//    NoteMap.put(2, arr1);
-//    NoteMap.put(3, arr2);
-//    NoteMap.put(4, arr2);
-//    NoteMap.put(5, arr3);
-//    NoteMap.put(6, arr3);
-//    NoteMap.put(7, arr3);
-//    NoteMap.put(8, arr4);
-//    NoteMap.put(10, arr5);
-//    NoteMap.put(11, arr5);
-//    NoteMap.put(12, arr6);
-//    NoteMap.put(13, arr6);
-//    assertEquals(NoteMap.toString(),
-//            piece.combineConsecutive(piece2).allNotes().values().toString());
-//  }
+  // to test the method combineConsecutive when both pieces have notes.
+  @Test
+  public void testCombineConsecutive() {
+    piece.addNote(e4BeatOne);
+    piece.addNote(d4BeatThree);
+    piece.addNote(g3BeatOne);
+    Note c4BeatEight = new Note(new Tone
+            (Pitch.C, Octave.FOUR), 1, 8);
+    piece.addNote(c4BeatEight);
+
+    Note e4BeatOne = new Note(new Tone
+            (Pitch.E, Octave.FOUR), 2, 1);
+    piece2.addNote(e4BeatOne);
+    Note e4BeatThree = new Note(new Tone
+            (Pitch.E, Octave.FOUR), 2, 3);
+    piece2.addNote(e4BeatThree);
+
+    List<Note> arr1 = new ArrayList<Note>();
+    arr1.add(g3BeatOne);
+    arr1.add(e4BeatOne);
+    List<Note> arr2 = new ArrayList<Note>();
+    arr2.add(d4BeatThree);
+    arr2.add(g3BeatOne);
+    List<Note> arr3 = new ArrayList<Note>();
+    arr3.add(g3BeatOne);
+    List<Note> arr4 = new ArrayList<Note>();
+    arr4.add(c4BeatEight);
+
+    List<Note> arr5 = new ArrayList<Note>();
+    arr5.add(e4BeatOne);
+    List<Note> arr6 = new ArrayList<Note>();
+    arr6.add(e4BeatThree);
+    Map<Integer, List<Note>> NoteMap = new HashMap<Integer, List<Note>>();
+    NoteMap.put(1, arr1);
+    NoteMap.put(2, arr1);
+    NoteMap.put(3, arr2);
+    NoteMap.put(4, arr2);
+    NoteMap.put(5, arr3);
+    NoteMap.put(6, arr3);
+    NoteMap.put(7, arr3);
+    NoteMap.put(8, arr4);
+    NoteMap.put(10, arr5);
+    NoteMap.put(11, arr5);
+    NoteMap.put(12, arr6);
+    NoteMap.put(13, arr6);
+    assertTrue(arr1.containsAll(piece.combineConsecutive(piece2).notesAt(1)));
+  }
 
   // to test the method getRange when there are no notes in this composition
   @Test
@@ -693,17 +644,17 @@ public class MusicModelTest {
     mm.addNote(n);
     mm.addNote(n1);
     notes.add(n);
-    notes.add(new Note(new Tone(Pitch.ASHARP, Octave.SEVEN), 0, 0));
-    notes.add(new Note(new Tone(Pitch.B, Octave.SEVEN), 0, 0));
-    notes.add(new Note(new Tone(Pitch.C, Octave.EIGHT), 0, 0));
-    notes.add(new Note(new Tone(Pitch.CSHARP, Octave.EIGHT), 0, 0));
-    notes.add(new Note(new Tone(Pitch.D, Octave.EIGHT), 0, 0));
-    notes.add(new Note(new Tone(Pitch.DSHARP, Octave.EIGHT), 0, 0));
-    notes.add(new Note(new Tone(Pitch.E, Octave.EIGHT), 0, 0));
-    notes.add(new Note(new Tone(Pitch.F, Octave.EIGHT), 0, 0));
-    notes.add(new Note(new Tone(Pitch.FSHARP, Octave.EIGHT), 0, 0));
-    notes.add(new Note(new Tone(Pitch.G, Octave.EIGHT), 0, 0));
-    notes.add(new Note(new Tone(Pitch.GSHARP, Octave.EIGHT), 0, 0));
+    notes.add(new Note(new Tone(Pitch.ASHARP, Octave.SEVEN), 1, 0));
+    notes.add(new Note(new Tone(Pitch.B, Octave.SEVEN), 1, 0));
+    notes.add(new Note(new Tone(Pitch.C, Octave.EIGHT), 1, 0));
+    notes.add(new Note(new Tone(Pitch.CSHARP, Octave.EIGHT), 1, 0));
+    notes.add(new Note(new Tone(Pitch.D, Octave.EIGHT), 1, 0));
+    notes.add(new Note(new Tone(Pitch.DSHARP, Octave.EIGHT), 1, 0));
+    notes.add(new Note(new Tone(Pitch.E, Octave.EIGHT), 1, 0));
+    notes.add(new Note(new Tone(Pitch.F, Octave.EIGHT), 1, 0));
+    notes.add(new Note(new Tone(Pitch.FSHARP, Octave.EIGHT), 1, 0));
+    notes.add(new Note(new Tone(Pitch.G, Octave.EIGHT), 1, 0));
+    notes.add(new Note(new Tone(Pitch.GSHARP, Octave.EIGHT), 1, 0));
     notes.add(n1);
     assertEquals(notes.toString(),
             mm.getRange().toString());

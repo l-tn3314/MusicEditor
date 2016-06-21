@@ -1,6 +1,9 @@
-package cs3500.music.model;
+package cs3500.music.tests;
 
+import org.junit.Assert;
 import org.junit.Test;
+
+import cs3500.music.model.Pitch;
 
 import static org.junit.Assert.*;
 
@@ -11,7 +14,7 @@ public class PitchTest {
 
   @Test
   public void testToStringC() {
-    assertEquals("C", Pitch.C.toString());
+    Assert.assertEquals("C", Pitch.C.toString());
   }
 
   @Test

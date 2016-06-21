@@ -33,11 +33,11 @@ public class Note implements Comparable<Note> {
   public Note(Tone tone, int duration, int downbeat, int instrument, int volume)
           throws IllegalArgumentException {
     this.tone = tone;
-    if (this.downbeat < 0) {
+    if (downbeat < 0) {
       throw new IllegalArgumentException("Can't have negative downbeat");
     }
     this.downbeat = downbeat;
-    if (duration < 0) {
+    if (duration < 1) {
       throw new IllegalArgumentException("Invalid Duration");
     }
     this.duration = duration;
@@ -53,8 +53,10 @@ public class Note implements Comparable<Note> {
    * @param downbeat the first beat this Note is played on
    * @param duration how long this Note is played for. The input is restricted to numbers greater
    *                 than 1 because a duration of zero or a negative number is not possible
+   * @throws IllegalArgumentException if the duration is less than one and the downbeat is less
+   * than zero
    */
-  public Note(Tone tone, int duration, int downbeat) {
+  public Note(Tone tone, int duration, int downbeat) throws IllegalArgumentException {
     this(tone, duration, downbeat, 1, 70);
   }
 

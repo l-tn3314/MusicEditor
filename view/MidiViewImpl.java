@@ -22,10 +22,9 @@ import cs3500.music.model.ReadOnlyModel;
 import cs3500.music.model.Tone;
 
 /**
- * Midi View implementation that plays back all of the notes in a composition.
- * Musical Instrument Digital Interface (MIDI) is supported by Java's standard library.
- * A sequencer which extends a MidiDevice is used to play back a Midi sequence that contains
- * lists of time-stamped MIDI data.
+ * Midi View implementation that plays back all of the notes in a composition. Musical Instrument
+ * Digital Interface (MIDI) is supported by Java's standard library. A sequencer which extends a
+ * MidiDevice is used to play back a Midi sequence that contains lists of time-stamped MIDI data.
  */
 public class MidiViewImpl implements MusicEditorView<Note> {
   private final Sequencer sequencer;

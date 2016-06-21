@@ -36,9 +36,9 @@ public class TextViewImpl implements MusicEditorView<Note> {
 
 
   /**
-   * Creates a String representation of this model. Columns are five characters. The leftmost column
-   * represents the beats, right-justified. The top row represents each pitch. Each note head is " X
-   * " and each note-sustain is "  |  ".
+   * Creates a String representation of this model. Columns are five characters.
+   * The leftmost column represents the beats, right-justified. The top row represents each pitch.
+   * Each note head is " X  " and each note-sustain is "  |  ".
    *
    * @param m model whose Notes is to be displayed
    * @return String representation of this model

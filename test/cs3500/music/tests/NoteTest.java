@@ -1,9 +1,14 @@
-package cs3500.music.model;
+package cs3500.music.tests;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Objects;
+
+import cs3500.music.model.Note;
+import cs3500.music.model.Octave;
+import cs3500.music.model.Pitch;
+import cs3500.music.model.Tone;
 
 import static org.junit.Assert.*;
 
@@ -50,11 +55,6 @@ public class NoteTest {
     Note pn = new Note(c4, 1, -2);
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testConstructorExceptionInvalidBeatZero() {
-    Note pn = new Note(c4, 1, 0);
-  }
-
   @Test
   public void testGetPitch() {
     assertEquals(Pitch.C, c4BeatOne.getTone().getPitch());
@@ -64,7 +64,7 @@ public class NoteTest {
   @Test
   public void testGetOctave() {
     assertEquals(Octave.FOUR, c4BeatOne.getTone().getOctave());
-    assertEquals(Octave.TEN, gSharp2BeatTen.getTone().getOctave());
+    assertEquals(Octave.TWO, gSharp2BeatTen.getTone().getOctave());
   }
 
   @Test
