@@ -134,7 +134,9 @@ public class MidiViewImpl implements MidiView {
     } catch (InvalidMidiDataException e) {
       e.printStackTrace();
     }
-    sequencer.start();
+    sequencer.setTickPosition(0);
+
+    //sequencer.start();
 
     if (this.sequencer.getTickPosition() == this.sequencer.getTickLength()) {
       this.sequencer.close();
@@ -153,7 +155,7 @@ public class MidiViewImpl implements MidiView {
     paused = true;
   }
 
-  private boolean paused = false;
+  private boolean paused = true;
   @Override
   public void pause() {
     if (paused) {
@@ -166,7 +168,12 @@ public class MidiViewImpl implements MidiView {
   }
 
   @Override
-  public int getCurBeat() {
-    return (int)(sequencer.getTickPosition() / ticksPerBeat);
+  public float getCurBeat() {
+    return (sequencer.getTickPosition());// / ticksPerBeat);
+  }
+
+  @Override
+  public boolean isPaused() {
+    return paused;
   }
 }

@@ -20,7 +20,7 @@ class ConcreteGuiViewPanel extends JPanel {
   private ReadOnlyModel<Note> model; // read only model where the gui gets the information from
   private int width; // the width of the panel
   private int height; // the height of the panel
-  private int linePos; // position of the line, at beat linePos
+  private float linePos; // position of the line, at beat linePos
 
   /**
    * Constructs a ConcreteGuiViewPanel with the given width and height
@@ -128,7 +128,7 @@ class ConcreteGuiViewPanel extends JPanel {
 
       g2D.setColor(Color.RED);
       g2D.setStroke(new BasicStroke(2));
-      g2D.drawLine((2 + linePos) * SCALE, SCALE, (2 + linePos) * SCALE,
+      g2D.drawLine((int)((2 + linePos) * SCALE), SCALE, (int)((2 + linePos) * SCALE),
               (noteRange.size() + 1) * SCALE);
 
     }
@@ -138,14 +138,21 @@ class ConcreteGuiViewPanel extends JPanel {
     repaint();
   }
 
-  void updateBeat(int i) {
-    this.linePos = i;
+  void updateBeat(float i) {
+    this.linePos = i / 10;
+//    float temp = linePos;
+//    while (temp < i) {
+//      this.linePos = temp;
+//      repaint();
+//      temp += 0.1;
+//    }
   }
 
   void updateCurBeatToEnd() {
     Map<Integer, List<Note>> notes = model.allNotes();
     int lastBeat = Collections.max(notes.keySet());
     this.linePos = lastBeat + (4 - (lastBeat % 4));
+    repaint();
   }
 
 //  void drawRedLine(Graphics g, int pos) {

@@ -15,9 +15,11 @@ public interface GuiView extends MusicEditorView<Note>{
 
   void pause();
 
-  void updateCurBeat(int i);
+  void updateCurBeat(float i);
 
   void addKeyListener(KeyListener listener);
 
   void addActionListener(ActionListener listener);
+
+  void setPaused(boolean isPaused);
 }

@@ -12,5 +12,7 @@ public interface MidiView extends MusicEditorView<Note>{
 
   void pause();
 
-  int getCurBeat();
+  float getCurBeat();
+
+  boolean isPaused();
 }

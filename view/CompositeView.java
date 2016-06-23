@@ -31,16 +31,18 @@ public class CompositeView implements GuiView {
   public void moveHome() {
     gui.moveHome();
     midi.moveHome();
+    gui.setPaused(midi.isPaused());
   }
 
   @Override
   public void pause() {
     gui.pause();
     midi.pause();
+    gui.setPaused(midi.isPaused());
   }
 
   @Override
-  public void updateCurBeat(int i) {
+  public void updateCurBeat(float i) {
     gui.updateCurBeat(midi.getCurBeat());
   }
 
@@ -48,6 +50,7 @@ public class CompositeView implements GuiView {
   public void moveEnd() {
     gui.moveEnd();
     midi.moveEnd();
+    gui.setPaused(midi.isPaused());
   }
 
   @Override
@@ -79,5 +82,9 @@ public class CompositeView implements GuiView {
     midi.display(m);
   }
 
+  @Override
+  public void setPaused(boolean isPaused) {
+
+  }
 }
 

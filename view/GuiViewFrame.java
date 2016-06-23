@@ -19,6 +19,7 @@ public class GuiViewFrame extends javax.swing.JFrame implements GuiView {
   static final int SCALE = 25; // scale for drawing
   private final ConcreteGuiViewPanel displayPanel; // the panel which is drawn on
   private final JScrollPane scrollPane;
+  private boolean isPaused;
 
   /**
    * Creates new GuiViews
@@ -40,6 +41,7 @@ public class GuiViewFrame extends javax.swing.JFrame implements GuiView {
     //
     // this.pack();
     scrollPane.setFocusable(true);
+    isPaused = true;
   }
 
   /**
@@ -99,13 +101,20 @@ public class GuiViewFrame extends javax.swing.JFrame implements GuiView {
   }
 
   @Override
-  public void updateCurBeat(int i) {
+  public void updateCurBeat(float i) {
+    autoScroll(i);
+    this.displayPanel.updateBeat(i);
+  }
+
+  void autoScroll(float i) {
     JViewport viewport = scrollPane.getViewport();
     double topright = viewport.getViewPosition().getX() + viewport.getWidth();
-    if ((i + 2) * SCALE > topright) {
+    if (!isPaused && (i + 2) * SCALE > topright * MidiViewImpl.ticksPerBeat) {
       viewport.setViewPosition(new Point((int)topright, (int)viewport.getViewPosition().getY()));
     }
-    this.displayPanel.updateBeat(i);
+    if (!isPaused && (i + 2) * SCALE < viewport.getViewPosition().getX() * MidiViewImpl.ticksPerBeat) {
+      viewport.setViewPosition(new Point((int)((i + 2) * SCALE), (int)viewport.getViewPosition().getY()));
+    }
   }
 
   @Override
@@ -122,5 +131,10 @@ public class GuiViewFrame extends javax.swing.JFrame implements GuiView {
   public void paintComponents(Graphics g) {
     super.paintComponents(g);
     this.displayPanel.paintComponent(g);
+  }
+
+  @Override
+  public void setPaused(boolean isPaused) {
+    this.isPaused = isPaused;
   }
 }
