@@ -20,6 +20,7 @@ class ConcreteGuiViewPanel extends JPanel {
   private ReadOnlyModel<Note> model; // read only model where the gui gets the information from
   private int width; // the width of the panel
   private int height; // the height of the panel
+  private int linePos; // position of the line, at beat linePos
 
   /**
    * Constructs a ConcreteGuiViewPanel with the given width and height
@@ -31,6 +32,7 @@ class ConcreteGuiViewPanel extends JPanel {
     super();
     this.width = width;
     this.height = height;
+    this.linePos = 0;
   }
 
   /**
@@ -56,6 +58,9 @@ class ConcreteGuiViewPanel extends JPanel {
   public void paintComponent(Graphics g) {
     // Handle the default painting
     super.paintComponent(g);
+
+    revalidate();
+    repaint();
 
     g.setColor(new Color(8, 15, 107));
 
@@ -120,8 +125,37 @@ class ConcreteGuiViewPanel extends JPanel {
         g2D.drawLine(2 * SCALE, (k + 1) * SCALE,
                 (2 + lastBeat + (4 - (lastBeat % 4))) * SCALE, (k + 1) * SCALE);
       }
+
+      g2D.setColor(Color.RED);
+      g2D.setStroke(new BasicStroke(2));
+      g2D.drawLine((2 + linePos) * SCALE, SCALE, (2 + linePos) * SCALE,
+              (noteRange.size() + 1) * SCALE);
+
     }
     setPreferredSize(new Dimension(width, height));
+
+    revalidate();
+    repaint();
   }
+
+  void updateBeat(int i) {
+    this.linePos = i;
+  }
+
+  void updateCurBeatToEnd() {
+    Map<Integer, List<Note>> notes = model.allNotes();
+    int lastBeat = Collections.max(notes.keySet());
+    this.linePos = lastBeat + (4 - (lastBeat % 4));
+  }
+
+//  void drawRedLine(Graphics g, int pos) {
+//    List<Note> noteRange = model.getRange();
+//    Graphics2D g2D = (Graphics2D)g;
+//    g2D.setColor(Color.RED);
+//    g2D.setStroke(new BasicStroke(2));
+//    g2D.drawLine((2 + pos) * SCALE, SCALE,
+//            (2 + pos) * SCALE, (noteRange.size() + 1) * SCALE);
+//  }
+
 }
 

@@ -26,8 +26,11 @@ import cs3500.music.model.Tone;
  * Digital Interface (MIDI) is supported by Java's standard library. A sequencer which extends a
  * MidiDevice is used to play back a Midi sequence that contains lists of time-stamped MIDI data.
  */
-public class MidiViewImpl implements MusicEditorView<Note> {
+public class MidiViewImpl implements MidiView {
   private final Sequencer sequencer;
+  private float tempo;
+  static final int ticksPerBeat = 10;
+
 
   public Sequencer getSequencer() {
     return this.sequencer;
@@ -88,9 +91,8 @@ public class MidiViewImpl implements MusicEditorView<Note> {
    */
   @Override
   public void display(ReadOnlyModel<Note> m) {
-    sequencer.setTempoInMPQ(m.getTempo());
-
-    int ticksPerBeat = 10;
+    tempo = m.getTempo();
+    sequencer.setTempoInMPQ(tempo);
 
     try {
       Sequence s = new Sequence(Sequence.PPQ, ticksPerBeat);
@@ -138,5 +140,33 @@ public class MidiViewImpl implements MusicEditorView<Note> {
       this.sequencer.close();
     }
   }
+@Override
+  public void moveHome() {
+    sequencer.setTickPosition(0);
+    sequencer.setTempoInMPQ(tempo);
+}
 
+  @Override
+  public void moveEnd() {
+    sequencer.setTickPosition(sequencer.getTickLength());
+    sequencer.stop();
+    paused = true;
+  }
+
+  private boolean paused = false;
+  @Override
+  public void pause() {
+    if (paused) {
+      sequencer.start();
+    } else {
+      sequencer.stop();
+    }
+    sequencer.setTempoInMPQ(tempo);
+    paused = !paused;
+  }
+
+  @Override
+  public int getCurBeat() {
+    return (int)(sequencer.getTickPosition() / ticksPerBeat);
+  }
 }

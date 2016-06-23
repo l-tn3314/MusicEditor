@@ -24,7 +24,7 @@ import cs3500.music.util.CompositionBuilder;
  * method removeNote() that is not in the Music Model.
  */
 public final class MusicPiece implements MusicEditorModel<Note> {
-  private int tempo; // tempo in microseconds per beat
+  private float tempo; // tempo in microseconds per beat
   private Map<Integer, List<Note>> beatsToNotes; // integer does not map to empty list
 
   /**
@@ -40,7 +40,7 @@ public final class MusicPiece implements MusicEditorModel<Note> {
    *
    * @param tempo in microseconds
    */
-  public MusicPiece(int tempo) {
+  public MusicPiece(float tempo) {
     this();
     this.tempo = tempo;
   }
@@ -326,7 +326,7 @@ public final class MusicPiece implements MusicEditorModel<Note> {
    * @return tempo(in microseconds) of this model
    */
   @Override
-  public int getTempo() {
+  public float getTempo() {
     return this.tempo;
   }
 
@@ -344,7 +344,7 @@ public final class MusicPiece implements MusicEditorModel<Note> {
    * Builder for MusicPiece
    */
   public static final class Builder implements CompositionBuilder<MusicEditorModel> {
-    int tempo;
+    float tempo;
     List<Note> notes;
 
     /**

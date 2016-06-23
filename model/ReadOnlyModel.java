@@ -42,5 +42,5 @@ public interface ReadOnlyModel<N> {
    *
    * @return tempo(in microseconds) of this model
    */
-  int getTempo();
+  float getTempo();
 }

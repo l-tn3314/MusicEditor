@@ -11,16 +11,19 @@ import cs3500.music.model.MusicEditorModel;
 import cs3500.music.model.Note;
 import cs3500.music.model.ReadOnlyModel;
 import cs3500.music.view.GuiView;
+import cs3500.music.view.MusicEditorView;
 
 public class Controller implements ActionListener {
   private MusicEditorModel<Note> model;
-  private GuiView view;
+  private MusicEditorView<Note> view;
 
   public Controller(MusicEditorModel m, GuiView v) {
     this.model = m;
     this.view = v;
-    configureKeyBoardListener();
-    this.view.addActionListener(this);
+    if (view instanceof GuiView ) {
+      configureKeyBoardListener();
+      ((GuiView) this.view).addActionListener(this);
+    }
   }
 
   private void configureKeyBoardListener() {
@@ -28,17 +31,25 @@ public class Controller implements ActionListener {
     Map<Integer, Runnable> keyPresses = new HashMap<>();
     Map<Integer, Runnable> keyReleases = new HashMap<>();
 
+    GuiView gui = (GuiView)view;
+
     keyPresses.put(KeyEvent.VK_HOME, new Runnable() {
       public void run() {
         //Runnable function for scrolling right
-        view.moveHome();
+        gui.moveHome();
       }
     });
 
     keyPresses.put(KeyEvent.VK_END, new Runnable() {
       public void run() {
         //Runnable function for scrolling right
-        view.moveEnd();
+        gui.moveEnd();
+      }
+    });
+
+    keyPresses.put(KeyEvent.VK_SPACE, new Runnable() {
+      public void run() {
+        gui.pause();
       }
     });
 
@@ -47,7 +58,7 @@ public class Controller implements ActionListener {
     kbh.setKeyReleasedMap(keyReleases);
     kbh.setKeyTypedMap(keyTypes);
 
-    view.addKeyListener(kbh);
+    gui.addKeyListener(kbh);
   }
 
   public void display() {
@@ -56,6 +67,6 @@ public class Controller implements ActionListener {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    view.resetFocus();
+    ((GuiView)view).resetFocus();
   }
 }

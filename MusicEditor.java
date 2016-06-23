@@ -13,7 +13,10 @@ import cs3500.music.model.Note;
 import cs3500.music.util.CompositionBuilder;
 import cs3500.music.util.MusicReader;
 import cs3500.music.util.ViewCreator;
+import cs3500.music.view.CompositeView;
 import cs3500.music.view.GuiView;
+import cs3500.music.view.GuiViewFrame;
+import cs3500.music.view.MidiViewImpl;
 import cs3500.music.view.MusicEditorView;
 
 /**
@@ -33,9 +36,15 @@ public class MusicEditor {
       e.printStackTrace();
     }
 
-    MusicEditorView<Note> view = ViewCreator.create(args[1]);
-    view.initialize();
-    view.display(m);
-    Controller controller = new Controller(m, (GuiView)view);
+    //MusicEditorView<Note> view = ViewCreator.create(args[1]);
+    //view.initialize();
+    //view.display(m);
+    GuiViewFrame frame = new GuiViewFrame();
+    frame.initialize();
+    MidiViewImpl midi = new MidiViewImpl();
+    midi.initialize();
+    GuiView gui = new CompositeView(frame, midi);
+    Controller controller = new Controller(m, gui);
+    controller.display();
   }
 }

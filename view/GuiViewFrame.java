@@ -25,17 +25,20 @@ public class GuiViewFrame extends javax.swing.JFrame implements GuiView {
    */
   public GuiViewFrame() {
     this.setTitle("Music Editor!");
-    setSize(300, 300);
-    this.displayPanel = new ConcreteGuiViewPanel(300, 300);
+    setSize(600, 500);
+    this.displayPanel = new ConcreteGuiViewPanel(600, 500);
     this.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
     //this.getContentPane().add(displayPanel);
     scrollPane = new JScrollPane(displayPanel,
             ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    scrollPane.setPreferredSize(new Dimension(200, 200));
-    this.add(scrollPane);
-    scrollPane.revalidate();
-    this.pack();
+    this.getContentPane().add(scrollPane);
+    scrollPane.setPreferredSize(new Dimension(600, 500));
+    this.scrollPane.revalidate();
+    this.scrollPane.repaint();
+    //
+    //
+    // this.pack();
     scrollPane.setFocusable(true);
   }
 
@@ -55,6 +58,8 @@ public class GuiViewFrame extends javax.swing.JFrame implements GuiView {
   @Override
   public void display(ReadOnlyModel<Note> m) {
     this.displayPanel.setModel(m);
+    //this.displayPanel.revalidate();
+    //this.displayPanel.repaint();
   }
 
   /**
@@ -77,6 +82,7 @@ public class GuiViewFrame extends javax.swing.JFrame implements GuiView {
   public void moveHome() {
     Point p = scrollPane.getViewport().getViewPosition();
     scrollPane.getViewport().setViewPosition(new Point(0, (int)p.getY()));
+    updateCurBeat(0);
   }
 
   @Override
@@ -84,6 +90,22 @@ public class GuiViewFrame extends javax.swing.JFrame implements GuiView {
     Point p = scrollPane.getViewport().getViewPosition();
     int x = displayPanel.getWidth() - scrollPane.getViewport().getWidth();
     scrollPane.getViewport().setViewPosition(new Point(x, (int)p.getY()));
+    displayPanel.updateCurBeatToEnd();
+  }
+
+  @Override
+  public void pause() {
+
+  }
+
+  @Override
+  public void updateCurBeat(int i) {
+    JViewport viewport = scrollPane.getViewport();
+    double topright = viewport.getViewPosition().getX() + viewport.getWidth();
+    if ((i + 2) * SCALE > topright) {
+      viewport.setViewPosition(new Point((int)topright, (int)viewport.getViewPosition().getY()));
+    }
+    this.displayPanel.updateBeat(i);
   }
 
   @Override
@@ -94,5 +116,11 @@ public class GuiViewFrame extends javax.swing.JFrame implements GuiView {
   @Override
   public void addActionListener(ActionListener listener) {
     //.addActionListener(listener);
+  }
+
+  @Override
+  public void paintComponents(Graphics g) {
+    super.paintComponents(g);
+    this.displayPanel.paintComponent(g);
   }
 }
