@@ -22,4 +22,6 @@ public interface GuiView extends MusicEditorView<Note>{
   void addActionListener(ActionListener listener);
 
   void setPaused(boolean isPaused);
+
+  String[] openPopUp(String message);
 }

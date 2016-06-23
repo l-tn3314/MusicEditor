@@ -20,11 +20,13 @@ public class GuiViewFrame extends javax.swing.JFrame implements GuiView {
   private final ConcreteGuiViewPanel displayPanel; // the panel which is drawn on
   private final JScrollPane scrollPane;
   private boolean isPaused;
+  private JOptionPane popup;
 
   /**
    * Creates new GuiViews
    */
   public GuiViewFrame() {
+    this.popup = new JOptionPane("Add a Note!");
     this.setTitle("Music Editor!");
     setSize(600, 500);
     this.displayPanel = new ConcreteGuiViewPanel(600, 500);
@@ -109,17 +111,19 @@ public class GuiViewFrame extends javax.swing.JFrame implements GuiView {
   void autoScroll(float i) {
     JViewport viewport = scrollPane.getViewport();
     double topright = viewport.getViewPosition().getX() + viewport.getWidth();
-    if (!isPaused && (i + 2) * SCALE > topright * MidiViewImpl.ticksPerBeat) {
+    if (!isPaused && (i + 2) * SCALE / MidiViewImpl.ticksPerBeat > topright) {
       viewport.setViewPosition(new Point((int)topright, (int)viewport.getViewPosition().getY()));
     }
-    if (!isPaused && (i + 2) * SCALE < viewport.getViewPosition().getX() * MidiViewImpl.ticksPerBeat) {
-      viewport.setViewPosition(new Point((int)((i + 2) * SCALE), (int)viewport.getViewPosition().getY()));
+    if (!isPaused && (i + 2) * SCALE/ MidiViewImpl.ticksPerBeat < viewport.getViewPosition().getX()) {
+      viewport.setViewPosition(new Point((int)((i + 2) * SCALE / MidiViewImpl.ticksPerBeat),
+              (int)viewport.getViewPosition().getY()));
     }
   }
 
   @Override
   public void addKeyListener(KeyListener listener) {
     scrollPane.addKeyListener(listener);
+    popup.addKeyListener(listener);
   }
 
   @Override
@@ -136,5 +140,47 @@ public class GuiViewFrame extends javax.swing.JFrame implements GuiView {
   @Override
   public void setPaused(boolean isPaused) {
     this.isPaused = isPaused;
+  }
+
+  @Override
+  public String[] openPopUp(String message) {
+    String[] result = new String[4];
+    if (isPaused) {
+      message = "Enter the following values: ";
+      JLabel label = new JLabel(message + "\n");
+      JPanel poppanel = new JPanel(new GridLayout(5, 1));
+      poppanel.add(label);
+
+      JLabel selectOctave = new JLabel("Octave: ");
+      String[] octaves = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+      JLabel selectPitch = new JLabel("Pitch: ");
+      String[] pitches = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
+      JComboBox dropDownOct = new JComboBox<String>(octaves);
+      JComboBox dropDownPitch = new JComboBox<String>(pitches);
+      poppanel.add(selectPitch);
+      poppanel.add(dropDownPitch);
+      poppanel.add(Box.createHorizontalStrut(15));
+      poppanel.add(selectOctave);
+      poppanel.add(dropDownOct);
+      poppanel.add(Box.createHorizontalStrut(15));
+      poppanel.add(new JLabel("Downbeat: "));
+      JTextField beatField = new JTextField(5);
+      poppanel.add(beatField);
+      poppanel.add(Box.createHorizontalStrut(15));
+      poppanel.add(new JLabel("Duration: "));
+      JTextField durationField = new JTextField(5);
+      poppanel.add(durationField);
+
+      popup.setPreferredSize(new Dimension(200, 200));
+      int operation = popup.showConfirmDialog(null, poppanel, "Add A Note!",
+              JOptionPane.OK_CANCEL_OPTION);
+      if(operation == JOptionPane.OK_OPTION) {
+        result[0] = (String)dropDownPitch.getSelectedItem();
+        result[1] = (String)dropDownOct.getSelectedItem();
+        result[2] = durationField.getText();
+        result[3] = beatField.getText();
+      }
+    }
+    return result;
   }
 }

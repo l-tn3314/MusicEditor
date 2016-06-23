@@ -1,18 +1,14 @@
 package cs3500.music.view;
 
-import java.util.Timer;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
+import java.util.Timer;
 import java.util.TimerTask;
-
-import javax.swing.*;
 
 import cs3500.music.model.Note;
 import cs3500.music.model.ReadOnlyModel;
 
-/**
- * Created by Tina on 6/22/2016.
- */
+
 public class CompositeView implements GuiView {
   GuiView gui;
   MidiView midi;
@@ -85,6 +81,11 @@ public class CompositeView implements GuiView {
   @Override
   public void setPaused(boolean isPaused) {
 
+  }
+
+  @Override
+  public String[] openPopUp(String message) {
+   return gui.openPopUp(message);
   }
 }
 

@@ -9,7 +9,9 @@ import java.util.Map;
 
 import cs3500.music.model.MusicEditorModel;
 import cs3500.music.model.Note;
-import cs3500.music.model.ReadOnlyModel;
+import cs3500.music.model.Octave;
+import cs3500.music.model.Pitch;
+import cs3500.music.model.Tone;
 import cs3500.music.view.GuiView;
 import cs3500.music.view.MusicEditorView;
 
@@ -22,8 +24,13 @@ public class Controller implements ActionListener {
     this.view = v;
     if (view instanceof GuiView ) {
       configureKeyBoardListener();
+      configureMouseListener();
       ((GuiView) this.view).addActionListener(this);
     }
+  }
+
+  private void configureMouseListener() {
+    MouseHandler mh = new MouseHandler();
   }
 
   private void configureKeyBoardListener() {
@@ -52,6 +59,35 @@ public class Controller implements ActionListener {
         gui.pause();
       }
     });
+
+    keyPresses.put(KeyEvent.VK_A, new Runnable() {
+      public void run () {
+        String[] ans = gui.openPopUp(" ");
+        //FIX THIS
+        if (ans[0] != null || ans[1] != null || ans[2] != null|| ans[3] != null) {
+          Pitch pitch = null;
+          Octave octave = null;
+          Integer duration = Integer.parseInt(ans[2]);
+          Integer beat = Integer.parseInt(ans[3]);
+          try {
+            for (int i = 0; i < Pitch.values().length; i++) {
+              if (Pitch.values()[i].toString().equals(ans[0])) {
+                pitch = Pitch.values()[i];
+              }
+            }
+            for (int j = 0; j < Octave.values().length; j++) {
+              if (Octave.values()[j].toString().equals(ans[1])) {
+                octave = Octave.values()[j];
+              }
+            }
+            model.addNote(new Note(new Tone(pitch, octave), duration, beat));
+            view.display(model);
+          } catch (Exception e) {
+            System.out.println("WHOOPS");
+          }
+        }
+      }
+            });
 
     KeyboardHandler kbh = new KeyboardHandler();
     kbh.setKeyPressedMap(keyPresses);
