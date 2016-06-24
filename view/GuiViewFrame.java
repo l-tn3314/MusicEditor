@@ -3,11 +3,13 @@ package cs3500.music.view;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
 
 import javax.swing.*;
 
 import cs3500.music.model.Note;
 import cs3500.music.model.ReadOnlyModel;
+import cs3500.music.model.Tone;
 
 
 /**
@@ -26,7 +28,7 @@ public class GuiViewFrame extends javax.swing.JFrame implements GuiView {
    * Creates new GuiViews
    */
   public GuiViewFrame() {
-    this.popup = new JOptionPane("Add a Note!");
+    this.popup = new JOptionPane();
     this.setTitle("Music Editor!");
     setSize(600, 500);
     this.displayPanel = new ConcreteGuiViewPanel(600, 500);
@@ -108,7 +110,7 @@ public class GuiViewFrame extends javax.swing.JFrame implements GuiView {
     this.displayPanel.updateBeat(i);
   }
 
-  void autoScroll(float i) {
+  private void autoScroll(float i) {
     JViewport viewport = scrollPane.getViewport();
     double topright = viewport.getViewPosition().getX() + viewport.getWidth();
     if (!isPaused && (i + 2) * SCALE / MidiViewImpl.ticksPerBeat > topright) {
@@ -127,8 +129,12 @@ public class GuiViewFrame extends javax.swing.JFrame implements GuiView {
   }
 
   @Override
+  public void addMouseListener(MouseListener listener) {
+    scrollPane.addMouseListener(listener);
+  }
+
+  @Override
   public void addActionListener(ActionListener listener) {
-    //.addActionListener(listener);
   }
 
   @Override
@@ -143,10 +149,10 @@ public class GuiViewFrame extends javax.swing.JFrame implements GuiView {
   }
 
   @Override
-  public String[] openPopUp(String message) {
+  public String[] addNotePopUp(String message) {
     String[] result = new String[4];
     if (isPaused) {
-      message = "Enter the following values: ";
+      message += "\nEnter the following values: ";
       JLabel label = new JLabel(message + "\n");
       JPanel poppanel = new JPanel(new GridLayout(5, 1));
       poppanel.add(label);
@@ -171,7 +177,7 @@ public class GuiViewFrame extends javax.swing.JFrame implements GuiView {
       JTextField durationField = new JTextField(5);
       poppanel.add(durationField);
 
-      popup.setPreferredSize(new Dimension(200, 200));
+
       int operation = popup.showConfirmDialog(null, poppanel, "Add A Note!",
               JOptionPane.OK_CANCEL_OPTION);
       if(operation == JOptionPane.OK_OPTION) {
@@ -180,7 +186,32 @@ public class GuiViewFrame extends javax.swing.JFrame implements GuiView {
         result[2] = durationField.getText();
         result[3] = beatField.getText();
       }
+      else {
+        result = new String[1];
+      }
+    } else {
+      result = new String[1];
     }
     return result;
+  }
+
+  @Override
+  public int beatAt(int x) {
+    return displayPanel.beatAt((int)scrollPane.getViewport().getViewPosition().getX() + x);
+  }
+
+  @Override
+  public Tone toneAt(int y) {
+    return displayPanel.toneAt((int)scrollPane.getViewport().getViewPosition().getY() + y);
+  }
+
+  @Override
+  public boolean removeNotePopUp(String removedNote) {
+    if(isPaused) {
+      int operation = popup.showConfirmDialog(null, removedNote, "Remove this note?",
+              JOptionPane.YES_NO_OPTION);
+      return operation == JOptionPane.YES_OPTION;
+    }
+    return false;
   }
 }

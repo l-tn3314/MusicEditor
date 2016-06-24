@@ -138,9 +138,9 @@ public class MidiViewImpl implements MidiView {
 
     //sequencer.start();
 
-    if (this.sequencer.getTickPosition() == this.sequencer.getTickLength()) {
-      this.sequencer.close();
-    }
+//    if (this.sequencer.getTickPosition() == this.sequencer.getTickLength()) {
+//      this.sequencer.close();
+//    }
   }
 @Override
   public void moveHome() {
@@ -174,6 +174,9 @@ public class MidiViewImpl implements MidiView {
 
   @Override
   public boolean isPaused() {
+    if (sequencer.getTickPosition() == sequencer.getTickLength()) {
+      paused = true;
+    }
     return paused;
   }
 }

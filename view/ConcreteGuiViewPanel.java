@@ -10,6 +10,7 @@ import javax.swing.*;
 
 import cs3500.music.model.Note;
 import cs3500.music.model.ReadOnlyModel;
+import cs3500.music.model.Tone;
 
 import static cs3500.music.view.GuiViewFrame.SCALE;
 
@@ -64,7 +65,7 @@ class ConcreteGuiViewPanel extends JPanel {
 
     g.setColor(new Color(8, 15, 107));
 
-    if (model != null) {
+    if (model != null && !model.allNotes().isEmpty()) {
       List<Note> noteRange = model.getRange();
       Map<Integer, List<Note>> notes = model.allNotes();
       int lastBeat = Collections.max(notes.keySet());
@@ -140,12 +141,6 @@ class ConcreteGuiViewPanel extends JPanel {
 
   void updateBeat(float i) {
     this.linePos = i / 10;
-//    float temp = linePos;
-//    while (temp < i) {
-//      this.linePos = temp;
-//      repaint();
-//      temp += 0.1;
-//    }
   }
 
   void updateCurBeatToEnd() {
@@ -155,14 +150,23 @@ class ConcreteGuiViewPanel extends JPanel {
     repaint();
   }
 
-//  void drawRedLine(Graphics g, int pos) {
-//    List<Note> noteRange = model.getRange();
-//    Graphics2D g2D = (Graphics2D)g;
-//    g2D.setColor(Color.RED);
-//    g2D.setStroke(new BasicStroke(2));
-//    g2D.drawLine((2 + pos) * SCALE, SCALE,
-//            (2 + pos) * SCALE, (noteRange.size() + 1) * SCALE);
-//  }
+  int beatAt(int x)  {
+    return (x / GuiViewFrame.SCALE) - 2;
+  }
 
+  Tone toneAt(int y) {
+    List<Note> noteRange = model.getRange();
+    List<Tone> orderedTones = new ArrayList<Tone>();
+
+    // To render the pitches
+    for (int i = noteRange.size() - 1; i >= 0; i--) {
+      orderedTones.add(noteRange.get(i).getTone());
+    }
+    try {
+      return orderedTones.get((y / GuiViewFrame.SCALE) - 1);
+    } catch(IndexOutOfBoundsException e) {
+      return null;
+    }
+  }
 }
 

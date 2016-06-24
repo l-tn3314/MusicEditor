@@ -39,10 +39,11 @@ public class MusicEditor {
 //    view.display(m);
 //    Controller controller = new Controller(m, (GuiView)view);
     GuiViewFrame frame = new GuiViewFrame();
-    frame.initialize();
+    //frame.initialize();
     MidiViewImpl midi = new MidiViewImpl();
-    midi.initialize();
+    //midi.initialize();
     GuiView gui = new CompositeView(frame, midi);
+    gui.initialize();
     Controller controller = new Controller(m, gui);
     controller.display();
 

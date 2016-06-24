@@ -2,11 +2,13 @@ package cs3500.music.view;
 
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import cs3500.music.model.Note;
 import cs3500.music.model.ReadOnlyModel;
+import cs3500.music.model.Tone;
 
 
 public class CompositeView implements GuiView {
@@ -20,7 +22,7 @@ public class CompositeView implements GuiView {
 
   @Override
   public void resetFocus() {
-
+    gui.resetFocus();
   }
 
   @Override
@@ -55,13 +57,19 @@ public class CompositeView implements GuiView {
   }
 
   @Override
+  public void addMouseListener(MouseListener listener) {
+    gui.addMouseListener(listener);
+  }
+
+  @Override
   public void addActionListener(ActionListener listener) {
 
   }
 
   @Override
   public void initialize() {
-
+    gui.initialize();
+    midi.initialize();
   }
 
   @Override
@@ -80,12 +88,29 @@ public class CompositeView implements GuiView {
 
   @Override
   public void setPaused(boolean isPaused) {
-
+    gui.setPaused(isPaused);
   }
 
   @Override
-  public String[] openPopUp(String message) {
-   return gui.openPopUp(message);
+  public String[] addNotePopUp(String message) {
+    gui.setPaused(midi.isPaused());
+    return gui.addNotePopUp(message);
+  }
+
+  @Override
+  public int beatAt(int x) {
+    return gui.beatAt(x);
+  }
+
+  @Override
+  public Tone toneAt(int y) {
+    return gui.toneAt(y);
+  }
+
+  @Override
+  public boolean removeNotePopUp(String removedNote) {
+    gui.setPaused(midi.isPaused());
+    return gui.removeNotePopUp(removedNote);
   }
 }
 

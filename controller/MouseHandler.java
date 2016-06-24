@@ -8,9 +8,13 @@ import java.util.Map;
 
 public class MouseHandler implements MouseListener {
   private Map<Integer, Runnable> mouseClickedMap;
+  private int x;
+  private int y;
 
   public MouseHandler() {
     this.mouseClickedMap = new HashMap<Integer, Runnable>();
+    this.x = 0;
+    this.y = 0;
   }
 
   public void setMouseClickedMap(Map<Integer, Runnable> map) {
@@ -18,6 +22,8 @@ public class MouseHandler implements MouseListener {
   }
   @Override
   public void mouseClicked(MouseEvent e) {
+    x = e.getX();
+    y = e.getY();
     if (e.getButton() == MouseEvent.BUTTON1) {
       if (this.mouseClickedMap.containsKey(MouseEvent.MOUSE_CLICKED)) {
         this.mouseClickedMap.get(MouseEvent.MOUSE_CLICKED).run();
@@ -43,5 +49,13 @@ public class MouseHandler implements MouseListener {
   @Override
   public void mouseExited(MouseEvent e) {
 
+  }
+
+  int returnX() {
+    return x;
+  }
+
+  int returnY() {
+    return y;
   }
 }
