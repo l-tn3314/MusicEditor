@@ -3,7 +3,7 @@ package cs3500.music.view;
 import cs3500.music.model.Note;
 
 /**
- * Created by Tuna on 6/22/2016.
+ * Midi view
  */
 public interface MidiView extends MusicEditorView<Note>{
   void moveHome();

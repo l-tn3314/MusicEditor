@@ -12,10 +12,8 @@ import cs3500.music.model.MusicPiece;
 import cs3500.music.model.Note;
 import cs3500.music.util.CompositionBuilder;
 import cs3500.music.util.MusicReader;
-import cs3500.music.view.CompositeView;
-import cs3500.music.view.GuiView;
-import cs3500.music.view.GuiViewFrame;
-import cs3500.music.view.MidiViewImpl;
+import cs3500.music.util.ViewCreator;
+import cs3500.music.view.MusicEditorView;
 
 /**
  * The main method that runs the main Music Editor. It takes in two arguments where the
@@ -34,18 +32,9 @@ public class MusicEditor {
       e.printStackTrace();
     }
 
-//    MusicEditorView<Note> view = ViewCreator.create(args[1]);
-//    view.initialize();
-//    view.display(m);
-//    Controller controller = new Controller(m, (GuiView)view);
-    GuiViewFrame frame = new GuiViewFrame();
-    //frame.initialize();
-    MidiViewImpl midi = new MidiViewImpl();
-    //midi.initialize();
-    GuiView gui = new CompositeView(frame, midi);
-    gui.initialize();
-    Controller controller = new Controller(m, gui);
+    MusicEditorView<Note> view = new ViewCreator().create(args[1]);
+    view.initialize();
+    Controller controller = new Controller(m, view);
     controller.display();
-
   }
 }

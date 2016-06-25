@@ -18,11 +18,11 @@ import cs3500.music.model.Tone;
 import cs3500.music.view.GuiView;
 import cs3500.music.view.MusicEditorView;
 
-public class Controller implements ActionListener {
+public class Controller implements ActionListener, IController<Note> {
   private MusicEditorModel<Note> model;
   private MusicEditorView<Note> view;
 
-  public Controller(MusicEditorModel m, GuiView v) {
+  public Controller(MusicEditorModel<Note> m, MusicEditorView<Note> v) {
     this.model = m;
     this.view = v;
     if (view instanceof GuiView ) {
@@ -135,12 +135,15 @@ public class Controller implements ActionListener {
     gui.addKeyListener(kbh);
   }
 
+  @Override
   public void display() {
     view.display(model);
   }
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    ((GuiView)view).resetFocus();
+    if (view instanceof GuiView) {
+      ((GuiView) view).resetFocus();
+    }
   }
 }

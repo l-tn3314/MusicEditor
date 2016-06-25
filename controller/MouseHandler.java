@@ -24,11 +24,9 @@ public class MouseHandler implements MouseListener {
   public void mouseClicked(MouseEvent e) {
     x = e.getX();
     y = e.getY();
-    if (e.getButton() == MouseEvent.BUTTON1) {
       if (this.mouseClickedMap.containsKey(MouseEvent.MOUSE_CLICKED)) {
         this.mouseClickedMap.get(MouseEvent.MOUSE_CLICKED).run();
       }
-    }
   }
 
   @Override

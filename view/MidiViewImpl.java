@@ -135,12 +135,6 @@ public class MidiViewImpl implements MidiView {
       e.printStackTrace();
     }
     sequencer.setTickPosition(0);
-
-    //sequencer.start();
-
-//    if (this.sequencer.getTickPosition() == this.sequencer.getTickLength()) {
-//      this.sequencer.close();
-//    }
   }
 @Override
   public void moveHome() {

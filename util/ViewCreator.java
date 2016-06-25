@@ -1,6 +1,7 @@
 package cs3500.music.util;
 
 import cs3500.music.model.Note;
+import cs3500.music.view.CompositeView;
 import cs3500.music.view.GuiViewFrame;
 import cs3500.music.view.MidiViewImpl;
 import cs3500.music.view.MusicEditorView;
@@ -27,6 +28,9 @@ public class ViewCreator {
 
       case "midi":
         return new MidiViewImpl();
+
+      case "composite":
+        return new CompositeView(new GuiViewFrame(), new MidiViewImpl());
       default:
         throw new IllegalArgumentException("This view type does not exist");
     }
