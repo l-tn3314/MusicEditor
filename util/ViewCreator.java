@@ -13,7 +13,8 @@ import cs3500.music.view.TextViewImpl;
 public class ViewCreator {
 
   /**
-   * Creates a View based on the given String ("console", "visual", "midi")
+   * Creates a View based on the given String ("console", "visual", "midi", "composite" (both midi
+   * and visual at the same time)
    *
    * @param type of View to be created
    * @return created View

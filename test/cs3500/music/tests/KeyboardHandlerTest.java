@@ -56,7 +56,7 @@ public class KeyboardHandlerTest {
     };
     keyPressed = new HashMap<Integer, Runnable>();
     keyPressed.put(KeyEvent.VK_A, charA);
-    keyPressed.put(KeyEvent.VK_SPACE,charSpace);
+    keyPressed.put(KeyEvent.VK_SPACE, charSpace);
     keyPressed.put(KeyEvent.VK_HOME, home);
     keyPressed.put(KeyEvent.VK_END, end);
     kbh.setKeyPressedMap(keyPressed);
@@ -94,7 +94,7 @@ public class KeyboardHandlerTest {
     kbh.keyPressed(event);
     kbh.keyPressed(event);
     assertEquals("Add a Note\n" +
-            "Add a Note\n",
+                    "Add a Note\n",
             result.toString());
   }
 
@@ -117,7 +117,7 @@ public class KeyboardHandlerTest {
     kbh.keyPressed(event);
     kbh.keyPressed(event1);
     assertEquals("Pause\n" +
-            "Add a Note\n",
+                    "Add a Note\n",
             result.toString());
   }
 

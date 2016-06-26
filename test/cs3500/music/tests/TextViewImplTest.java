@@ -149,173 +149,173 @@ public class TextViewImplTest {
             out.toString());
   }
 
-//       to test the method display is padding the beats corresponding
+  //       to test the method display is padding the beats corresponding
 //             to the length of the longest beat in the song when the longest beat is
 //             2 characters long (between 10 - 99)
-    @Test
-    public void testPaddingTwoChar() {
-      Note n = new Note(new Tone(Pitch.ASHARP, Octave.EIGHT), 4, 10);
-      model.addNote(n);
-      view.display(model);
-      assertEquals("   A#8 \n" +
-                      " 0     \n" +
-                      " 1     \n" +
-                      " 2     \n" +
-                      " 3     \n" +
-                      " 4     \n" +
-                      " 5     \n" +
-                      " 6     \n" +
-                      " 7     \n" +
-                      " 8     \n" +
-                      " 9     \n" +
-                      "10  X  \n" +
-                      "11  |  \n" +
-                      "12  |  \n" +
-                      "13  |  \n",
-              out.toString());
-    }
+  @Test
+  public void testPaddingTwoChar() {
+    Note n = new Note(new Tone(Pitch.ASHARP, Octave.EIGHT), 4, 10);
+    model.addNote(n);
+    view.display(model);
+    assertEquals("   A#8 \n" +
+                    " 0     \n" +
+                    " 1     \n" +
+                    " 2     \n" +
+                    " 3     \n" +
+                    " 4     \n" +
+                    " 5     \n" +
+                    " 6     \n" +
+                    " 7     \n" +
+                    " 8     \n" +
+                    " 9     \n" +
+                    "10  X  \n" +
+                    "11  |  \n" +
+                    "12  |  \n" +
+                    "13  |  \n",
+            out.toString());
+  }
 
-    // to test the method display when given a list of only one note
-    // with a duration of one
-    @Test
-    public void testOneNoteDurationOne() {
-      Note n = new Note(new Tone(Pitch.ASHARP, Octave.EIGHT), 1, 0);
-      model.addNote(n);
-      view.display(model);
-      assertEquals("  A#8 \n" +
-                      "0  X  \n",
-              out.toString());
-    }
+  // to test the method display when given a list of only one note
+  // with a duration of one
+  @Test
+  public void testOneNoteDurationOne() {
+    Note n = new Note(new Tone(Pitch.ASHARP, Octave.EIGHT), 1, 0);
+    model.addNote(n);
+    view.display(model);
+    assertEquals("  A#8 \n" +
+                    "0  X  \n",
+            out.toString());
+  }
 
-    // to test the method display for one note and the duration is greater than one
-    @Test
-    public void testOneNoteDurationBiggerThanOne() {
-      Note n = new Note(new Tone(Pitch.C, Octave.FOUR), 3, 4);
-      model.addNote(n);
-      view.display(model);
-      assertEquals("   C4 \n" +
-                      "0     \n" +
-                      "1     \n" +
-                      "2     \n" +
-                      "3     \n" +
-                      "4  X  \n" +
-                      "5  |  \n" +
-                      "6  |  \n",
-              out.toString());
-    }
+  // to test the method display for one note and the duration is greater than one
+  @Test
+  public void testOneNoteDurationBiggerThanOne() {
+    Note n = new Note(new Tone(Pitch.C, Octave.FOUR), 3, 4);
+    model.addNote(n);
+    view.display(model);
+    assertEquals("   C4 \n" +
+                    "0     \n" +
+                    "1     \n" +
+                    "2     \n" +
+                    "3     \n" +
+                    "4  X  \n" +
+                    "5  |  \n" +
+                    "6  |  \n",
+            out.toString());
+  }
 
-    // to test display when two notes in the given list are
-    // the same tone, have the same downbeat, and have the same duration
-    @Test
-    public void testOverlapSameDuration() {
-      Note n = new Note(new Tone(Pitch.A, Octave.SEVEN), 4, 4);
-      Note n1 = new Note(new Tone(Pitch.A, Octave.SEVEN), 4, 4);
-      model.addNote(n);
-      model.addNote(n1);
-      view.display(model);
-      assertEquals("   A7 \n" +
-                      "0     \n" +
-                      "1     \n" +
-                      "2     \n" +
-                      "3     \n" +
-                      "4  X  \n" +
-                      "5  |  \n" +
-                      "6  |  \n" +
-                      "7  |  \n",
-              out.toString());
-    }
+  // to test display when two notes in the given list are
+  // the same tone, have the same downbeat, and have the same duration
+  @Test
+  public void testOverlapSameDuration() {
+    Note n = new Note(new Tone(Pitch.A, Octave.SEVEN), 4, 4);
+    Note n1 = new Note(new Tone(Pitch.A, Octave.SEVEN), 4, 4);
+    model.addNote(n);
+    model.addNote(n1);
+    view.display(model);
+    assertEquals("   A7 \n" +
+                    "0     \n" +
+                    "1     \n" +
+                    "2     \n" +
+                    "3     \n" +
+                    "4  X  \n" +
+                    "5  |  \n" +
+                    "6  |  \n" +
+                    "7  |  \n",
+            out.toString());
+  }
 
-    // to test display when two notes have the same tone and the same
-    // downbeat but one of the durations is shorter
-    @Test
-    public void testOverlayDifferentDuration() {
-      Note n = new Note(new Tone(Pitch.A, Octave.SEVEN), 4, 4);
-      Note n1 = new Note(new Tone(Pitch.A, Octave.SEVEN), 2, 4);
-      model.addNote(n);
-      model.addNote(n1);
-      view.display(model);
-      assertEquals("   A7 \n" +
-                      "0     \n" +
-                      "1     \n" +
-                      "2     \n" +
-                      "3     \n" +
-                      "4  X  \n" +
-                      "5  |  \n" +
-                      "6  |  \n" +
-                      "7  |  \n",
-              out.toString());
-    }
+  // to test display when two notes have the same tone and the same
+  // downbeat but one of the durations is shorter
+  @Test
+  public void testOverlayDifferentDuration() {
+    Note n = new Note(new Tone(Pitch.A, Octave.SEVEN), 4, 4);
+    Note n1 = new Note(new Tone(Pitch.A, Octave.SEVEN), 2, 4);
+    model.addNote(n);
+    model.addNote(n1);
+    view.display(model);
+    assertEquals("   A7 \n" +
+                    "0     \n" +
+                    "1     \n" +
+                    "2     \n" +
+                    "3     \n" +
+                    "4  X  \n" +
+                    "5  |  \n" +
+                    "6  |  \n" +
+                    "7  |  \n",
+            out.toString());
+  }
 
-    // to test display when two notes have the same tone and their downbeats
-    // are right after each other and their durations overlap
-    @Test
-    public void testConsecutiveDownbeat() {
-      Note n = new Note(new Tone(Pitch.A, Octave.SEVEN), 4, 4);
-      Note n1 = new Note(new Tone(Pitch.A, Octave.SEVEN), 2, 5);
-      model.addNote(n);
-      model.addNote(n1);
-      view.display(model);
-      assertEquals("   A7 \n" +
-                      "0     \n" +
-                      "1     \n" +
-                      "2     \n" +
-                      "3     \n" +
-                      "4  X  \n" +
-                      "5  X  \n" +
-                      "6  |  \n" +
-                      "7  |  \n",
-              out.toString());
-    }
+  // to test display when two notes have the same tone and their downbeats
+  // are right after each other and their durations overlap
+  @Test
+  public void testConsecutiveDownbeat() {
+    Note n = new Note(new Tone(Pitch.A, Octave.SEVEN), 4, 4);
+    Note n1 = new Note(new Tone(Pitch.A, Octave.SEVEN), 2, 5);
+    model.addNote(n);
+    model.addNote(n1);
+    view.display(model);
+    assertEquals("   A7 \n" +
+                    "0     \n" +
+                    "1     \n" +
+                    "2     \n" +
+                    "3     \n" +
+                    "4  X  \n" +
+                    "5  X  \n" +
+                    "6  |  \n" +
+                    "7  |  \n",
+            out.toString());
+  }
 
-    // to test display when two notes have the same tone and their downbeats
-    // are not right after eachother but their durations overlap.
-    @Test
-    public void testNotConsecutiveDownbeat() {
-      Note n = new Note(new Tone(Pitch.A, Octave.TWO), 4, 4);
-      Note n1 = new Note(new Tone(Pitch.A, Octave.TWO), 2, 6);
-      model.addNote(n);
-      model.addNote(n1);
-      view.display(model);
-      assertEquals("   A2 \n" +
-                      "0     \n" +
-                      "1     \n" +
-                      "2     \n" +
-                      "3     \n" +
-                      "4  X  \n" +
-                      "5  |  \n" +
-                      "6  X  \n" +
-                      "7  |  \n",
-              out.toString());
-    }
+  // to test display when two notes have the same tone and their downbeats
+  // are not right after eachother but their durations overlap.
+  @Test
+  public void testNotConsecutiveDownbeat() {
+    Note n = new Note(new Tone(Pitch.A, Octave.TWO), 4, 4);
+    Note n1 = new Note(new Tone(Pitch.A, Octave.TWO), 2, 6);
+    model.addNote(n);
+    model.addNote(n1);
+    view.display(model);
+    assertEquals("   A2 \n" +
+                    "0     \n" +
+                    "1     \n" +
+                    "2     \n" +
+                    "3     \n" +
+                    "4  X  \n" +
+                    "5  |  \n" +
+                    "6  X  \n" +
+                    "7  |  \n",
+            out.toString());
+  }
 
-    // to test the method display when multiple notes are played one
-    // after another
-    @Test
-    public void testRightAfterEachOther() {
-      Note n = new Note(new Tone(Pitch.C, Octave.FOUR), 2, 0);
-      Note n1 = new Note(new Tone(Pitch.C, Octave.FOUR), 4, 2);
-      Note n2 = new Note(new Tone(Pitch.CSHARP, Octave.FOUR), 3, 0);
-      Note n3 = new Note(new Tone(Pitch.CSHARP, Octave.FOUR), 2, 3);
-      model.addNote(n);
-      model.addNote(n1);
-      model.addNote(n2);
-      model.addNote(n3);
-      view.display(model);
-      assertEquals("   C4  C#4 \n" +
-                      "0  X    X  \n" +
-                      "1  |    |  \n" +
-                      "2  X    |  \n" +
-                      "3  |    X  \n" +
-                      "4  |    |  \n" +
-                      "5  |       \n",
-              out.toString());
-    }
+  // to test the method display when multiple notes are played one
+  // after another
+  @Test
+  public void testRightAfterEachOther() {
+    Note n = new Note(new Tone(Pitch.C, Octave.FOUR), 2, 0);
+    Note n1 = new Note(new Tone(Pitch.C, Octave.FOUR), 4, 2);
+    Note n2 = new Note(new Tone(Pitch.CSHARP, Octave.FOUR), 3, 0);
+    Note n3 = new Note(new Tone(Pitch.CSHARP, Octave.FOUR), 2, 3);
+    model.addNote(n);
+    model.addNote(n1);
+    model.addNote(n2);
+    model.addNote(n3);
+    view.display(model);
+    assertEquals("   C4  C#4 \n" +
+                    "0  X    X  \n" +
+                    "1  |    |  \n" +
+                    "2  X    |  \n" +
+                    "3  |    X  \n" +
+                    "4  |    |  \n" +
+                    "5  |       \n",
+            out.toString());
+  }
 
 
   // to render a few notes of Mary has a little Lamb
-    @Test
+  @Test
   public void testStringView() {
-      model.addNote(e4BeatOne);
+    model.addNote(e4BeatOne);
     model.addNote(d4BeatThree);
     model.addNote(c4BeatFive);
     model.addNote(d4BeatSeven);
@@ -324,7 +324,7 @@ public class TextViewImplTest {
     model.addNote(e4BeatThirteen);
     model.addNote(g3BeatOne);
     model.addNote(g3BeatNine);
-      view.display(model);
+    view.display(model);
     assertEquals("    G3  G#3   A3  A#3   B3   C4  C#4   D4  D#4   E4 \n" +
                     " 0                                                  \n" +
                     " 1  X                                            X  \n" +

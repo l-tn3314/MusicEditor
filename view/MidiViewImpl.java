@@ -30,11 +30,7 @@ public class MidiViewImpl implements MidiView {
   private final Sequencer sequencer;
   private float tempo;
   static final int ticksPerBeat = 10;
-
-
-  public Sequencer getSequencer() {
-    return this.sequencer;
-  }
+  private boolean paused = true;
 
   /**
    * Constructs a MidiViewImpl
@@ -68,8 +64,19 @@ public class MidiViewImpl implements MidiView {
     this.sequencer = sequencer;
   }
 
+  /**
+   * To return the sequencer of this midiView
+   */
+  public Sequencer getSequencer() {
+    return this.sequencer;
+  }
+
+  /**
+   * To initialize this type of view
+   */
   @Override
   public void initialize() {
+    // Does nothing
   }
 
   /**
@@ -135,13 +142,22 @@ public class MidiViewImpl implements MidiView {
       e.printStackTrace();
     }
     sequencer.setTickPosition(0);
+    sequencer.start();
+    paused = false;
   }
-@Override
+
+  /**
+   * To the current position of this song back to zero
+   */
+  @Override
   public void moveHome() {
     sequencer.setTickPosition(0);
     sequencer.setTempoInMPQ(tempo);
-}
+  }
 
+  /**
+   * To set the current position of the song to the last beat of the song
+   */
   @Override
   public void moveEnd() {
     sequencer.setTickPosition(sequencer.getTickLength());
@@ -149,7 +165,9 @@ public class MidiViewImpl implements MidiView {
     paused = true;
   }
 
-  private boolean paused = true;
+  /**
+   * To pause this music
+   */
   @Override
   public void pause() {
     if (paused) {
@@ -161,11 +179,21 @@ public class MidiViewImpl implements MidiView {
     paused = !paused;
   }
 
+  /**
+   * Gets the current beat of the song
+   *
+   * @return the current position of the song
+   */
   @Override
   public float getCurBeat() {
-    return (sequencer.getTickPosition());// / ticksPerBeat);
+    return (sequencer.getTickPosition());
   }
 
+  /**
+   * To determine if this song is paused
+   *
+   * @return true if it is paused; false otherwise
+   */
   @Override
   public boolean isPaused() {
     if (sequencer.getTickPosition() == sequencer.getTickLength()) {

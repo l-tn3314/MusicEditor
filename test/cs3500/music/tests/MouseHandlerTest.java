@@ -38,7 +38,8 @@ public class MouseHandlerTest {
 
   @Test
   public void testClickOnce() {
-    MouseEvent mouse = new MouseEvent(new JFrame(), MouseEvent.MOUSE_CLICKED, 1, 0, 10, 10, 1, true);
+    MouseEvent mouse = new MouseEvent(new JFrame(), MouseEvent.MOUSE_CLICKED,
+            1, 0, 10, 10, 1, true);
     clicked.put(MouseEvent.MOUSE_CLICKED, mouseClick);
     mh.mouseClicked(mouse);
     assertEquals("Remove Note",
@@ -47,7 +48,8 @@ public class MouseHandlerTest {
 
   @Test
   public void testNoClick() {
-    MouseEvent mouse = new MouseEvent(new JFrame(), MouseEvent.MOUSE_CLICKED, 1, 0, 10, 10, 1, true);
+    MouseEvent mouse = new MouseEvent(new JFrame(), MouseEvent.MOUSE_CLICKED,
+            1, 0, 10, 10, 1, true);
     mh.mouseClicked(mouse);
     assertEquals("",
             result.toString());
@@ -55,7 +57,8 @@ public class MouseHandlerTest {
 
   @Test
   public void testOtherClick() {
-    MouseEvent mouse = new MouseEvent(new JFrame(), MouseEvent.MOUSE_CLICKED, 1, 0, 10, 10, 1, true);
+    MouseEvent mouse = new MouseEvent(new JFrame(), MouseEvent.MOUSE_CLICKED,
+            1, 0, 10, 10, 1, true);
     clicked.put(MouseEvent.MOUSE_CLICKED, mouseClick);
     mh.mousePressed(mouse);
     assertEquals("",
@@ -64,7 +67,8 @@ public class MouseHandlerTest {
 
   @Test
   public void testClickMoreThanOnce() {
-    MouseEvent mouse = new MouseEvent(new JFrame(), MouseEvent.MOUSE_CLICKED, 1, 0, 10, 10, 1, true);
+    MouseEvent mouse = new MouseEvent(new JFrame(), MouseEvent.MOUSE_CLICKED,
+            1, 0, 10, 10, 1, true);
     clicked.put(MouseEvent.MOUSE_CLICKED, mouseClick);
     mh.mouseClicked(mouse);
     mh.mouseClicked(mouse);
@@ -74,8 +78,10 @@ public class MouseHandlerTest {
 
   @Test
   public void testClickAfterOtherEvent() {
-    MouseEvent mouse = new MouseEvent(new JFrame(), MouseEvent.MOUSE_CLICKED, 1, 0, 10, 10, 1, true);
-    MouseEvent mouseRelease = new MouseEvent(new JFrame(), MouseEvent.MOUSE_RELEASED, 1, 0, 10, 10, 1, true);
+    MouseEvent mouse = new MouseEvent(new JFrame(), MouseEvent.MOUSE_CLICKED,
+            1, 0, 10, 10, 1, true);
+    MouseEvent mouseRelease = new MouseEvent(new JFrame(), MouseEvent.MOUSE_RELEASED,
+            1, 0, 10, 10, 1, true);
     clicked.put(MouseEvent.MOUSE_CLICKED, mouseClick);
     mh.mouseReleased(mouseRelease);
     mh.mouseClicked(mouse);

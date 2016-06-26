@@ -48,10 +48,10 @@ class ConcreteGuiViewPanel extends JPanel {
   }
 
   /**
-   * Renders a composition of music. Downbeats are rendered in black and their durations
-   * if they are greater than one are rendered in cyan. Measure lines are drawn every four beats
-   * and a thick bar line is drawn to separate between octaves. Beats are also rendered and the
-   * top and pitches rendered to the left.
+   * Renders a composition of music. Downbeats are rendered in black and their durations if they
+   * are greater than one are rendered in cyan. Measure lines are drawn every four beats and a
+   * thick bar line is drawn to separate between octaves. Beats are also rendered and the top and
+   * pitches rendered to the left.
    *
    * @param g the graphics that are to be painted
    */
@@ -127,22 +127,29 @@ class ConcreteGuiViewPanel extends JPanel {
                 (2 + lastBeat + (4 - (lastBeat % 4))) * SCALE, (k + 1) * SCALE);
       }
 
+      // Moving red line across the screen
       g2D.setColor(Color.RED);
       g2D.setStroke(new BasicStroke(2));
-      g2D.drawLine((int)((2 + linePos) * SCALE), SCALE, (int)((2 + linePos) * SCALE),
+      g2D.drawLine((int) ((2 + linePos) * SCALE), SCALE, (int) ((2 + linePos) * SCALE),
               (noteRange.size() + 1) * SCALE);
-
     }
     setPreferredSize(new Dimension(width, height));
-
     revalidate();
     repaint();
   }
 
+  /**
+   * Updates the position of the red line across the screen
+   *
+   * @param i the position of the line
+   */
   void updateBeat(float i) {
     this.linePos = i / 10;
   }
 
+  /**
+   * To move the position of the line to the last beat of the song
+   */
   void updateCurBeatToEnd() {
     Map<Integer, List<Note>> notes = model.allNotes();
     int lastBeat = Collections.max(notes.keySet());
@@ -150,10 +157,22 @@ class ConcreteGuiViewPanel extends JPanel {
     repaint();
   }
 
-  int beatAt(int x)  {
+  /**
+   * to convert the given x position to a beat number in a composition
+   *
+   * @param x given x position, in this case it is of the mouse
+   * @return the beat at the given x position
+   */
+  int beatAt(int x) {
     return (x / GuiViewFrame.SCALE) - 2;
   }
 
+  /**
+   * converts the given y position to a Tone if the Tone is in the song.
+   *
+   * @param y the given y position
+   * @return the Tone at the given y position, null if that Tone is not a note in this song
+   */
   Tone toneAt(int y) {
     List<Note> noteRange = model.getRange();
     List<Tone> orderedTones = new ArrayList<Tone>();
@@ -164,7 +183,7 @@ class ConcreteGuiViewPanel extends JPanel {
     }
     try {
       return orderedTones.get((y / GuiViewFrame.SCALE) - 1);
-    } catch(IndexOutOfBoundsException e) {
+    } catch (IndexOutOfBoundsException e) {
       return null;
     }
   }

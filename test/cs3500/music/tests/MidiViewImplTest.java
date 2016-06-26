@@ -50,6 +50,7 @@ public class MidiViewImplTest {
           (Pitch.D, Octave.FOUR);
   Tone g3 = new Tone
           (Pitch.G, Octave.THREE);
+
   @Before
   public void init() {
     this.stringBuilder = new StringBuilder();
@@ -77,7 +78,7 @@ public class MidiViewImplTest {
     g3BeatNine = new Note(g3, 7, 9);
   }
 
-   // to test when no notes are added to this piece of music that there are no messages sent
+  // to test when no notes are added to this piece of music that there are no messages sent
   @Test
   public void testEmptyModel() {
     midiView.display(new MusicPiece());

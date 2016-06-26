@@ -1,8 +1,6 @@
 package cs3500.music.controller;
 
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -18,28 +16,60 @@ import cs3500.music.model.Tone;
 import cs3500.music.view.GuiView;
 import cs3500.music.view.MusicEditorView;
 
-public class Controller implements ActionListener, IController<Note> {
-  private MusicEditorModel<Note> model;
-  private MusicEditorView<Note> view;
+/**
+ * To represent a MusicEditor Controller that has a MusicEditorModel<Note></Note> and a
+ * MusicEditorView<Note></Note> and passes information between the model and view, based off
+ * of user input.
+ * NOTE** This implementation of a controller specifically uses a GuiView and another
+ * implementation can be created to work for other types of views.
+ */
+public class Controller implements IController<Note> {
+  private MusicEditorModel<Note> model; // a MusicEditorModel
+  private MusicEditorView<Note> view; // A MusicEditorView
 
+  /**
+   * Constructs a controller for a MusicEditor.
+   *
+   * @param m the model of type MusicEditorModel<Note>
+   * @param v the view of type MusicEditorView<Note>
+   */
   public Controller(MusicEditorModel<Note> m, MusicEditorView<Note> v) {
     this.model = m;
     this.view = v;
-    if (view instanceof GuiView ) {
+    if (view instanceof GuiView) {
       configureKeyBoardListener();
       configureMouseListener();
-      ((GuiView) this.view).addActionListener(this);
     }
   }
 
+  // Convenience constructor for testing
+  public Controller(MusicEditorModel<Note> m, GuiView<Note> v,
+                    KeyboardHandler keypresses, MouseHandler mouseClicks) {
+    this.model = m;
+    v.addKeyListener(keypresses);
+    v.addMouseListener(mouseClicks);
+    this.view = v;
+  }
+
+  /**
+   * Set the configuration of a mouse listener by mapping each all the mouse events supported by
+   * this music editor to a function to be performed by either the guiview or the model. Sets the
+   * map created to the map in the MouseListener class.
+   */
   private void configureMouseListener() {
     Map<Integer, Runnable> clicked = new HashMap<Integer, Runnable>();
     MouseHandler mh = new MouseHandler();
-    GuiView gui = (GuiView)view;
+    GuiView gui = (GuiView) view;
+
+    // removes a note from the model when the user clicks on a note and passes this information
+    // to the view to display
     clicked.put(MouseEvent.MOUSE_CLICKED, new Runnable() {
       public void run() {
         Tone tone = gui.toneAt(mh.returnY());
         int beat = gui.beatAt(mh.returnX());
+        if (beat < 0) {
+          return;
+        }
         List<Note> notes = model.notesAt(beat);
         List<Tone> tones = new ArrayList<Tone>();
         for (Note n : notes) {
@@ -47,7 +77,8 @@ public class Controller implements ActionListener, IController<Note> {
         }
         if (tone != null && beat >= 0 && tones.contains(tone)) {
           Note toRemove = notes.get(tones.indexOf(tone));
-          if (gui.removeNotePopUp("Remove " + tone.toString() + " starting on beat " + toRemove.getDownbeat() + "?")) {
+          if (gui.removeNotePopUp("Remove " + tone.toString() + " starting on beat " +
+                  toRemove.getDownbeat() + "?")) {
             for (Note n : notes) {
               if (n.getTone().equals(tone)) {
                 model.removeNote(n);
@@ -58,48 +89,57 @@ public class Controller implements ActionListener, IController<Note> {
           }
         }
       }
-            });
+    });
     mh.setMouseClickedMap(clicked);
     gui.addMouseListener(mh);
   }
 
+  /**
+   * Configures a KeyBoardListener by mapping all of the KeyEvents that are supported by this Music
+   * Editor to a runnable function. Splits the events into three maps: keysTyped, keysPressed,
+   * keysReleased to represent different user inputs with keys. Sets the map created to the map in
+   * the KeyListener class.
+   */
   private void configureKeyBoardListener() {
     Map<Character, Runnable> keyTypes = new HashMap<>();
     Map<Integer, Runnable> keyPresses = new HashMap<>();
     Map<Integer, Runnable> keyReleases = new HashMap<>();
 
-    GuiView gui = (GuiView)view;
+    GuiView gui = (GuiView) view;
 
     keyPresses.put(KeyEvent.VK_HOME, new Runnable() {
+      //Runnable function for moving to the beginning
       public void run() {
-        //Runnable function for scrolling right
         gui.moveHome();
       }
     });
 
+    //Runnable function for moving to the end
     keyPresses.put(KeyEvent.VK_END, new Runnable() {
       public void run() {
-        //Runnable function for scrolling right
         gui.moveEnd();
       }
     });
 
+    // Runnable function to pause the composite view
     keyPresses.put(KeyEvent.VK_SPACE, new Runnable() {
       public void run() {
         gui.pause();
       }
     });
 
+    // Runnable function that adds a note to the model based off of user input in the form of
+    // a popup dialog by the user
     keyPresses.put(KeyEvent.VK_A, new Runnable() {
-      public void run () {
+      public void run() {
         runHelp("");
       }
+
       private void runHelp(String s) {
         String[] ans = gui.addNotePopUp(s);
         if (ans.length < 3) {
           return;
-        }
-         else if (ans[0] == null || ans[1] == null || ans[2] == null|| ans[3] == null) {
+        } else if (ans[0] == null || ans[1] == null || ans[2] == null || ans[3] == null) {
           runHelp("Please fill in all fields");
         } else {
           try {
@@ -125,7 +165,7 @@ public class Controller implements ActionListener, IController<Note> {
           }
         }
       }
-            });
+    });
 
     KeyboardHandler kbh = new KeyboardHandler();
     kbh.setKeyPressedMap(keyPresses);
@@ -135,15 +175,12 @@ public class Controller implements ActionListener, IController<Note> {
     gui.addKeyListener(kbh);
   }
 
+  /**
+   * Draws this view given this model
+   */
   @Override
   public void display() {
     view.display(model);
   }
 
-  @Override
-  public void actionPerformed(ActionEvent e) {
-    if (view instanceof GuiView) {
-      ((GuiView) view).resetFocus();
-    }
-  }
 }
