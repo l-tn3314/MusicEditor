@@ -23,7 +23,7 @@ import cs3500.music.util.CompositionBuilder;
  * notes into the editor in which it would return the default value and putting in a note into the
  * method removeNote() that is not in the Music Model.
  */
-public final class MusicPiece implements MusicEditorModel<Note> {
+public class MusicPiece implements MusicEditorModel<Note> {
   private float tempo; // tempo in microseconds per beat
   private Map<Integer, List<Note>> beatsToNotes; // integer does not map to empty list
 

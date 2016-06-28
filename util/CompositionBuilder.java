@@ -33,4 +33,5 @@ public interface CompositionBuilder<T> {
    * @param volume     The volume (in the range [0, 127])
    */
   CompositionBuilder<T> addNote(int start, int end, int instrument, int pitch, int volume);
+
 }

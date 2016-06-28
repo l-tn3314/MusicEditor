@@ -29,7 +29,7 @@ import cs3500.music.model.Tone;
 public class MidiViewImpl implements MidiView {
   private final Sequencer sequencer;
   private float tempo;
-  static final int ticksPerBeat = 10;
+  static final int ticksPerBeat = 100;
   private boolean paused = true;
 
   /**
@@ -146,13 +146,18 @@ public class MidiViewImpl implements MidiView {
     paused = false;
   }
 
+  void resetTempo() {
+    sequencer.setTempoInMPQ(tempo);
+  }
+
   /**
    * To the current position of this song back to zero
    */
   @Override
   public void moveHome() {
     sequencer.setTickPosition(0);
-    sequencer.setTempoInMPQ(tempo);
+    resetTempo();
+    //sequencer.setTempoInMPQ(tempo);
   }
 
   /**
@@ -175,7 +180,8 @@ public class MidiViewImpl implements MidiView {
     } else {
       sequencer.stop();
     }
-    sequencer.setTempoInMPQ(tempo);
+    resetTempo();
+    // sequencer.setTempoInMPQ(tempo);
     paused = !paused;
   }
 

@@ -27,12 +27,15 @@ public class GuiViewFrame extends javax.swing.JFrame implements GuiView<Note> {
    * Creates new GuiViews
    */
   public GuiViewFrame() {
+    this(new ConcreteGuiViewPanel(600, 500));
+  }
+
+  public GuiViewFrame(ConcreteGuiViewPanel jp) {
     this.popup = new JOptionPane();
     this.setTitle("Music Editor!");
     setSize(600, 500);
-    this.displayPanel = new ConcreteGuiViewPanel(600, 500);
-    this.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-    scrollPane = new JScrollPane(displayPanel,
+    this.displayPanel = jp;
+    this.scrollPane = new JScrollPane(displayPanel,
             ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     this.getContentPane().add(scrollPane);

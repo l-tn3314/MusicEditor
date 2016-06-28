@@ -18,7 +18,7 @@ import static cs3500.music.view.GuiViewFrame.SCALE;
  * JPanel that displays the notes stored in a model
  */
 class ConcreteGuiViewPanel extends JPanel {
-  private ReadOnlyModel<Note> model; // read only model where the gui gets the information from
+  protected ReadOnlyModel<Note> model; // read only model where the gui gets the information from
   private int width; // the width of the panel
   private int height; // the height of the panel
   private float linePos; // position of the line, at beat linePos
@@ -127,15 +127,26 @@ class ConcreteGuiViewPanel extends JPanel {
                 (2 + lastBeat + (4 - (lastBeat % 4))) * SCALE, (k + 1) * SCALE);
       }
 
-      // Moving red line across the screen
-      g2D.setColor(Color.RED);
-      g2D.setStroke(new BasicStroke(2));
-      g2D.drawLine((int) ((2 + linePos) * SCALE), SCALE, (int) ((2 + linePos) * SCALE),
-              (noteRange.size() + 1) * SCALE);
+      drawOther(g);
+
     }
     setPreferredSize(new Dimension(width, height));
     revalidate();
     repaint();
+  }
+
+  protected void drawOther(Graphics g) {
+    List<Note> noteRange = model.getRange();
+
+    Graphics2D g2D = (Graphics2D)g;
+    g2D.setColor(new Color(8, 15, 107));
+
+    // Moving red line across the screen
+    g2D.setColor(Color.RED);
+    g2D.setStroke(new BasicStroke(2));
+    g2D.drawLine((int) ((2 + linePos) * SCALE), SCALE, (int) ((2 + linePos) * SCALE),
+            (noteRange.size() + 1) * SCALE);
+
   }
 
   /**
@@ -144,7 +155,7 @@ class ConcreteGuiViewPanel extends JPanel {
    * @param i the position of the line
    */
   void updateBeat(float i) {
-    this.linePos = i / 10;
+    this.linePos = i / MidiViewImpl.ticksPerBeat;
   }
 
   /**
